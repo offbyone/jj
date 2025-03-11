@@ -2029,7 +2029,7 @@ fn test_git_push_sign_on_push() {
         r#"
     signing.backend = "test"
     signing.key = "impeccable"
-    git.sign-on-push = true
+    git.sign-on-push = "mine()"
     "#,
     );
     work_dir
@@ -2044,8 +2044,23 @@ fn test_git_push_sign_on_push() {
     work_dir
         .run_jj(["new", "-m", "commit which should not be signed 1"])
         .success();
+    work_dir.run_jj(["new"]).success();
     work_dir
-        .run_jj(["new", "-m", "commit which should not be signed 2"])
+        .run_jj([
+            "describe",
+            "-m",
+            "commit which should not be signed 2 with different author",
+            "--author=Foo <foo@example.org>",
+        ])
+        .success();
+    work_dir.run_jj(["new"]).success();
+    work_dir
+        .run_jj([
+            "describe",
+            "-m",
+            "commit with different author",
+            "--author=Foo <foo@example.org>",
+        ])
         .success();
     work_dir
         .run_jj(["new", "-m", "commit which is signed initially"])
@@ -2056,7 +2071,8 @@ fn test_git_push_sign_on_push() {
     insta::assert_snapshot!(output, @r"
     @  commit which is signed initially
     │  Signature: test-display, Status: good, Key: impeccable
-    ○  commit which should not be signed 2
+    ○  commit with different author
+    ○  commit which should not be signed 2 with different author
     ○  commit which should not be signed 1
     ○  commit to be signed 2
     ○  commit to be signed 1
@@ -2079,7 +2095,8 @@ fn test_git_push_sign_on_push() {
     insta::assert_snapshot!(output, @r"
     @  commit which is signed initially
     │  Signature: test-display, Status: good, Key: impeccable
-    ○  commit which should not be signed 2
+    ○  commit with different author
+    ○  commit which should not be signed 2 with different author
     ○  commit which should not be signed 1
     ○  commit to be signed 2
     ○  commit to be signed 1
@@ -2092,12 +2109,12 @@ fn test_git_push_sign_on_push() {
     let output = work_dir.run_jj(["git", "push"]);
     insta::assert_snapshot!(output, @r"
     ------- stderr -------
-    Updated signatures of 2 commits
-    Rebased 3 descendant commits
+    Signed 2 commits
+    Rebased 4 descendant commits
     Changes to push to origin:
-      Move forward bookmark bookmark2 from 38a204733702 to 87d9bf2ca4fb
-    Working copy  (@) now at: wqnwkozp eb60bb86 (empty) commit which is signed initially
-    Parent commit (@-)      : kmkuslsw 50a620ed (empty) commit which should not be signed 2
+      Move forward bookmark bookmark2 from 38a204733702 to 9d829c101989
+    Working copy  (@) now at: nkmrtpmo 1515d2fb (empty) commit which is signed initially
+    Parent commit (@-)      : lylxulpl 044091b0 (empty) commit with different author
     [EOF]
     ");
     // Commits which are being pushed should be signed.
@@ -2106,7 +2123,8 @@ fn test_git_push_sign_on_push() {
     insta::assert_snapshot!(output, @r"
     @  commit which is signed initially
     │  Signature: test-display, Status: good, Key: impeccable
-    ○  commit which should not be signed 2
+    ○  commit with different author
+    ○  commit which should not be signed 2 with different author
     ○  commit which should not be signed 1
     ○  commit to be signed 2
     │  Signature: test-display, Status: good, Key: impeccable
@@ -2129,13 +2147,13 @@ fn test_git_push_sign_on_push() {
     ]);
     insta::assert_snapshot!(output, @r"
     ------- stderr -------
-    Created 1 bookmarks pointing to kpqxywon f4169ad1 bookmark3 | (empty) commit which should not be signed 1
+    Created 1 bookmarks pointing to kpqxywon e994a113 bookmark3 | (empty) commit which should not be signed 1
     [EOF]
     ");
     let output = work_dir.run_jj(["bookmark", "move", "bookmark2", "--to", "bookmark3"]);
     insta::assert_snapshot!(output, @r"
     ------- stderr -------
-    Moved 1 bookmarks to kpqxywon f4169ad1 bookmark2* bookmark3 | (empty) commit which should not be signed 1
+    Moved 1 bookmarks to kpqxywon e994a113 bookmark2* bookmark3 | (empty) commit which should not be signed 1
     [EOF]
     ");
     test_env.add_config(r#"revset-aliases."immutable_heads()" = "bookmark3""#);
@@ -2143,14 +2161,102 @@ fn test_git_push_sign_on_push() {
     insta::assert_snapshot!(output, @r"
     ------- stderr -------
     Changes to push to origin:
-      Move forward bookmark bookmark2 from 87d9bf2ca4fb to f4169ad1a603
+      Move forward bookmark bookmark2 from 9d829c101989 to e994a113c9c9
     [EOF]
     ");
     let output = work_dir.run_jj(["log", "-T", template, "-r", "::"]);
     insta::assert_snapshot!(output, @r"
     @  commit which is signed initially
     │  Signature: test-display, Status: good, Key: impeccable
-    ○  commit which should not be signed 2
+    ○  commit with different author
+    ○  commit which should not be signed 2 with different author
+    ◆  commit which should not be signed 1
+    ◆  commit to be signed 2
+    │  Signature: test-display, Status: good, Key: impeccable
+    ◆  commit to be signed 1
+    │  Signature: test-display, Status: good, Key: impeccable
+    ◆  description 2
+    │ ○  description 1
+    ├─╯
+    ◆
+    [EOF]
+    ");
+
+    // With `git.sign-on-push = "mine()"`, commit with different author should not
+    // be signed
+    let output = work_dir.run_jj([
+        "bookmark",
+        "move",
+        "bookmark2",
+        "--to",
+        "description('commit which should not be signed 2')",
+    ]);
+    insta::assert_snapshot!(output, @r"
+    ------- stderr -------
+    Moved 1 bookmarks to kmkuslsw 7c9762a6 bookmark2* | (empty) commit which should not be signed 2 with different author
+    [EOF]
+    ");
+    let output = work_dir.run_jj(["git", "push", "-b", "bookmark2"]);
+    insta::assert_snapshot!(output, @r"
+    ------- stderr -------
+    Changes to push to origin:
+      Move forward bookmark bookmark2 from e994a113c9c9 to 7c9762a6feea
+    [EOF]
+    ");
+    let output = work_dir.run_jj(["log", "-T", template, "-r", "::"]);
+    insta::assert_snapshot!(output, @r"
+    @  commit which is signed initially
+    │  Signature: test-display, Status: good, Key: impeccable
+    ○  commit with different author
+    ○  commit which should not be signed 2 with different author
+    ◆  commit which should not be signed 1
+    ◆  commit to be signed 2
+    │  Signature: test-display, Status: good, Key: impeccable
+    ◆  commit to be signed 1
+    │  Signature: test-display, Status: good, Key: impeccable
+    ◆  description 2
+    │ ○  description 1
+    ├─╯
+    ◆
+    [EOF]
+    ");
+
+    // With `git.sign-on-push = "all()"`, commit with different author is signed
+    test_env.add_config(
+        r#"
+    git.sign-on-push = "all()"
+    "#,
+    );
+    let output = work_dir.run_jj([
+        "bookmark",
+        "move",
+        "bookmark2",
+        "--to",
+        "description('commit with different author')",
+    ]);
+    insta::assert_snapshot!(output, @r"
+    ------- stderr -------
+    Moved 1 bookmarks to lylxulpl 044091b0 bookmark2* | (empty) commit with different author
+    [EOF]
+    ");
+    let output = work_dir.run_jj(["git", "push", "-b", "bookmark2"]);
+    insta::assert_snapshot!(output, @r"
+    ------- stderr -------
+    Signed 1 commits
+    Rebased 1 descendant commits
+    Changes to push to origin:
+      Move forward bookmark bookmark2 from 7c9762a6feea to 5856f817c788
+    Working copy  (@) now at: nkmrtpmo 4d829b70 (empty) commit which is signed initially
+    Parent commit (@-)      : lylxulpl 5856f817 bookmark2 | (empty) commit with different author
+    [EOF]
+    ");
+    let output = work_dir.run_jj(["log", "-T", template, "-r", "::"]);
+    insta::assert_snapshot!(output, @r"
+    @  commit which is signed initially
+    │  Signature: test-display, Status: good, Key: impeccable
+    ○  commit with different author
+    │  Signature: test-display, Status: good, Key: impeccable
+    ○  commit which should not be signed 2 with different author
     ◆  commit which should not be signed 1
     ◆  commit to be signed 2
     │  Signature: test-display, Status: good, Key: impeccable
