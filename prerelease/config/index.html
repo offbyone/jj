@@ -3493,8 +3493,10 @@ can override the default style with the following keys:</p>
 </code></pre></div>
 <h3 id="diff-format">Diff format<a class="headerlink" href="#diff-format" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">[ui]</span>
-<span class="c1"># Possible values: &quot;color-words&quot; (default), &quot;git&quot;, &quot;summary&quot;</span>
-<span class="n">diff</span><span class="p">.</span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;git&quot;</span>
+<span class="c1"># Builtin formats: &quot;:color-words&quot; (default), &quot;:git&quot;,</span>
+<span class="c1">#                  &quot;:summary&quot;, &quot;:stat&quot;, &quot;:types&quot;, &quot;:name-only&quot;</span>
+<span class="c1"># or external command name and arguments (see below)</span>
+<span class="n">diff-formatter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;:git&quot;</span>
 </code></pre></div>
 <h4 id="color-words-diff-options">Color-words diff options<a class="headerlink" href="#color-words-diff-options" title="Permanent link">&para;</a></h4>
 <p>In color-words diffs, changed words are displayed inline by default. Because
@@ -3541,13 +3543,13 @@ the default number of lines of context shown.</p>
 <span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
 </code></pre></div>
 <h3 id="generating-diffs-by-external-command">Generating diffs by external command<a class="headerlink" href="#generating-diffs-by-external-command" title="Permanent link">&para;</a></h3>
-<p>If <code>ui.diff.tool</code> is set, the specified diff command will be called instead of
-the internal diff function.</p>
+<p>If <code>ui.diff-formatter</code> is not a builtin format, the specified diff command will
+be called.</p>
 <div class="highlight"><pre><span></span><code><span class="k">[ui]</span>
 <span class="c1"># Use Difftastic by default</span>
-<span class="n">diff</span><span class="p">.</span><span class="n">tool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;difft&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--color=always&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;$left&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;$right&quot;</span><span class="p">]</span>
+<span class="n">diff-formatter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;difft&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--color=always&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;$left&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;$right&quot;</span><span class="p">]</span>
 <span class="c1"># Use tool named &quot;&lt;name&gt;&quot; (see below)</span>
-<span class="n">diff</span><span class="p">.</span><span class="n">tool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;name&gt;&quot;</span>
+<span class="n">diff-formatter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;name&gt;&quot;</span>
 </code></pre></div>
 <p>The external diff tool can also be enabled by <code>diff --tool &lt;name&gt;</code> argument.
 For the tool named <code>&lt;name&gt;</code>, command arguments can be configured as follows.</p>
@@ -3563,7 +3565,7 @@ For the tool named <code>&lt;name&gt;</code>, command arguments can be configure
 and right sides.  The <code>diff-invocation-mode</code> config can change this to file by file
 invocations as follows:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[ui]</span>
-<span class="n">diff</span><span class="p">.</span><span class="n">tool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vimdiff&quot;</span>
+<span class="n">diff-formatter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vimdiff&quot;</span>
 
 <span class="k">[merge-tools.vimdiff]</span>
 <span class="n">diff-invocation-mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;file-by-file&quot;</span>
