@@ -896,9 +896,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#commitid-changeid-type" class="md-nav__link">
+  <a href="#changeid-type" class="md-nav__link">
     <span class="md-ellipsis">
-      CommitId / ChangeId type
+      ChangeId type
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commitid-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      CommitId type
     </span>
   </a>
   
@@ -1997,9 +2006,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#commitid-changeid-type" class="md-nav__link">
+  <a href="#changeid-type" class="md-nav__link">
     <span class="md-ellipsis">
-      CommitId / ChangeId type
+      ChangeId type
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commitid-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      CommitId type
     </span>
   </a>
   
@@ -2422,11 +2440,17 @@ type</a> are available as keywords. For example,
   likely to change in future version to respect the command line path arguments.</li>
 <li><code>.root() -&gt; Boolean</code>: True if the commit is the root commit.</li>
 </ul>
-<h3 id="commitid-changeid-type"><code>CommitId</code> / <code>ChangeId</code> type<a class="headerlink" href="#commitid-changeid-type" title="Permanent link">&para;</a></h3>
+<h3 id="changeid-type"><code>ChangeId</code> type<a class="headerlink" href="#changeid-type" title="Permanent link">&para;</a></h3>
 <p>The following methods are defined.</p>
 <ul>
-<li><code>.normal_hex() -&gt; String</code>: Normal hex representation (0-9a-f), useful for
-  ChangeId, whose canonical hex representation is "reversed" (z-k).</li>
+<li><code>.normal_hex() -&gt; String</code>: Normal hex representation (0-9a-f) instead of the
+  canonical "reversed" (z-k) representation.</li>
+<li><code>.short([len: Integer]) -&gt; String</code></li>
+<li><code>.shortest([min_len: Integer]) -&gt; ShortestIdPrefix</code>: Shortest unique prefix.</li>
+</ul>
+<h3 id="commitid-type"><code>CommitId</code> type<a class="headerlink" href="#commitid-type" title="Permanent link">&para;</a></h3>
+<p>The following methods are defined.</p>
+<ul>
 <li><code>.short([len: Integer]) -&gt; String</code></li>
 <li><code>.shortest([min_len: Integer]) -&gt; ShortestIdPrefix</code>: Shortest unique prefix.</li>
 </ul>
