@@ -2298,7 +2298,7 @@ behave as though the <code>all:</code> modifier was used every time it would mat
 <p>An <code>all:</code> modifier before a revset expression does not otherwise change its
 meaning. Strictly speaking, it is not part of the revset language. The notation
 is similar to the modifiers like <code>glob:</code> allowed before <a href="#string-patterns">string
-patterms</a>.</p>
+patterns</a>.</p>
 <p>For example, <code>jj rebase -r w -d xyz+</code> will rebase <code>w</code> on top of the child of
 <code>xyz</code> as long as <code>xyz</code> has exactly one child.</p>
 <p>If <code>xyz</code> has more than one child, the <code>all:</code> modifier is <em>not</em> specified, and
