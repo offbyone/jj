@@ -8764,7 +8764,6 @@ to your configuration file to achieve that:</p>
 inline it into your config file:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[aliases]</span>
 <span class="n">my-inline-script</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;util&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;exec&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bash&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-c&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">#!/usr/bin/env bash</span>
 <span class="s2">set -euo pipefail</span>
 <span class="s2">echo &quot;Look Ma, everything in one file!&quot;</span>
 <span class="s2">echo &quot;args: $@&quot;</span>
@@ -8773,6 +8772,10 @@ inline it into your config file:</p>
 <span class="c1"># This last empty string will become &quot;$0&quot; in bash, so your actual arguments</span>
 <span class="c1"># are all included in &quot;$@&quot; and start at &quot;$1&quot; as expected.</span>
 </code></pre></div>
+<blockquote>
+<p>Note: Shebangs (e.g. <code>#!/usr/bin/env</code>) aren't necessary since you're
+already explicitly passing your script into the right shell.</p>
+</blockquote>
 <p><strong>Usage:</strong> <code>jj util exec &lt;COMMAND&gt; [ARGS]...</code></p>
 <h6 id="arguments_52"><strong>Arguments:</strong><a class="headerlink" href="#arguments_52" title="Permanent link">&para;</a></h6>
 <ul>

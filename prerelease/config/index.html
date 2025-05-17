@@ -3932,7 +3932,6 @@ argument. Additional arguments are passed through. Here are some examples:</p>
 <span class="c1">#                            ^^^^</span>
 <span class="c1"># This makes sure that flags are passed to your script instead of parsed by jj.</span>
 <span class="n">my-inline-script</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;util&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;exec&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bash&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-c&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">#!/usr/bin/env bash</span>
 <span class="s2">set -euo pipefail</span>
 <span class="s2">echo &quot;Look Ma, everything in one file!&quot;</span>
 <span class="s2">echo &quot;args: $@&quot;</span>
@@ -3941,6 +3940,10 @@ argument. Additional arguments are passed through. Here are some examples:</p>
 <span class="c1"># This last empty string will become &quot;$0&quot; in bash, so your actual arguments</span>
 <span class="c1"># are all included in &quot;$@&quot; and start at &quot;$1&quot; as expected.</span>
 </code></pre></div>
+<blockquote>
+<p>Note: Shebangs (e.g. <code>#!/usr/bin/env</code>) aren't necessary since you're already
+explicitly passing your script into the right shell.</p>
+</blockquote>
 <h2 id="editor">Editor<a class="headerlink" href="#editor" title="Permanent link">&para;</a></h2>
 <p>The default editor is set via <code>ui.editor</code>, though there are several places to
 set it. The priority is as follows (environment variables are marked with
