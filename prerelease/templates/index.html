@@ -1159,6 +1159,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#color-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Color labels
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
       Configuration
@@ -2269,6 +2278,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#color-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Color labels
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
       Configuration
@@ -2710,6 +2728,16 @@ inside a single-quoted string literal.</p>
   <code>"git-submodule"</code>, or <code>"conflict"</code>.</li>
 <li><code>.executable() -&gt; Boolean</code>: True if the entry is an executable file.</li>
 </ul>
+<h2 id="color-labels">Color labels<a class="headerlink" href="#color-labels" title="Permanent link">&para;</a></h2>
+<p>Template fragments are usually labeled with the command name, the context (or
+the top-level object), and the method names. You can <a href="../config/#custom-colors-and-styles">customize the output
+colors</a> by using these labels.</p>
+<p>For example, the following template is labeled as <code>op_log operation id short</code>:</p>
+<div class="highlight"><pre><span></span><code>jj<span class="w"> </span>op<span class="w"> </span>log<span class="w"> </span>-T<span class="w"> </span><span class="s1">&#39;self.id().short()&#39;</span>
+</code></pre></div>
+<p>In addition to that, you can insert arbitrary labels by <code>label(label, content)</code>
+function.</p>
+<p>To inspect how output fragments are labeled, use <code>--color=debug</code> option.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>The default templates and aliases() are defined in the <code>[templates]</code> and
 <code>[template-aliases]</code> sections of the config respectively. The exact definitions
