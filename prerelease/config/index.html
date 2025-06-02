@@ -4472,6 +4472,10 @@ snapshots on filesystem changes by setting
 <code>core.watchman.register-snapshot-trigger = true</code>.</p>
 <p>You can check whether Watchman is enabled and whether it is installed correctly
 using <code>jj debug watchman status</code>.</p>
+<p>Note: <code>watchman</code> heavily uses <code>inotify</code> and sets up a user watch per-file. On
+large repositories, this may cause <code>watchman</code> to fail and commands like
+<code>jj status</code> to take longer than expected. If you experience this run
+<code>jj debug watchman status</code> and tune your <code>inotify</code> limits.</p>
 <h2 id="snapshot-settings">Snapshot settings<a class="headerlink" href="#snapshot-settings" title="Permanent link">&para;</a></h2>
 <h3 id="paths-to-automatically-track">Paths to automatically track<a class="headerlink" href="#paths-to-automatically-track" title="Permanent link">&para;</a></h3>
 <p>All new files in the working copy that don't match the ignore patterns are
