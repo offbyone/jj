@@ -2029,6 +2029,12 @@ pub trait SymbolResolverExtension {
     ) -> Vec<Box<dyn PartialSymbolResolver + 'a>>;
 }
 
+impl AsRef<dyn SymbolResolverExtension> for dyn SymbolResolverExtension {
+    fn as_ref(&self) -> &(dyn SymbolResolverExtension + 'static) {
+        self
+    }
+}
+
 /// Resolves bookmarks, remote bookmarks, tags, git refs, and full and
 /// abbreviated commit and change ids.
 pub struct DefaultSymbolResolver<'a> {
@@ -2040,9 +2046,9 @@ pub struct DefaultSymbolResolver<'a> {
 impl<'a> DefaultSymbolResolver<'a> {
     /// Creates new symbol resolver that will first disambiguate short ID
     /// prefixes within the given `context_repo` if configured.
-    pub fn new(
+    pub fn new<'e, E: AsRef<dyn SymbolResolverExtension> + ?Sized + 'e>(
         context_repo: &'a dyn Repo,
-        extensions: &[impl AsRef<dyn SymbolResolverExtension>],
+        extensions: impl IntoIterator<Item = &'e E>,
     ) -> Self {
         DefaultSymbolResolver {
             commit_id_resolver: CommitPrefixResolver {
@@ -2054,7 +2060,7 @@ impl<'a> DefaultSymbolResolver<'a> {
                 context: None,
             },
             extensions: extensions
-                .iter()
+                .into_iter()
                 .flat_map(|ext| ext.as_ref().new_resolvers(context_repo))
                 .collect(),
         }

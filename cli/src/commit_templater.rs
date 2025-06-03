@@ -59,6 +59,7 @@ use jj_lib::revset::RevsetContainingFn;
 use jj_lib::revset::RevsetDiagnostics;
 use jj_lib::revset::RevsetModifier;
 use jj_lib::revset::RevsetParseContext;
+use jj_lib::revset::SymbolResolverExtension;
 use jj_lib::revset::UserRevsetExpression;
 use jj_lib::settings::UserSettings;
 use jj_lib::signing::SigStatus;
@@ -75,6 +76,7 @@ use crate::diff_util;
 use crate::diff_util::DiffStats;
 use crate::formatter::Formatter;
 use crate::revset_util;
+use crate::revset_util::SingleSymbolResolver;
 use crate::template_builder;
 use crate::template_builder::expect_plain_text_expression;
 use crate::template_builder::merge_fn_map;
@@ -1005,10 +1007,51 @@ fn builtin_commit_methods<'repo>() -> CommitTemplateBuildMethodFnMap<'repo, Comm
 
             let is_contained =
                 template_parser::expect_string_literal_with(revset_node, |revset, span| {
-                    Ok(evaluate_user_revset(language, diagnostics, span, revset)?.containing_fn())
+                    let expression = parse_user_revset(language, diagnostics, span, revset)?;
+                    Ok(evaluate_revset_expression(language, span, &expression)?.containing_fn())
                 })?;
 
             let out_property = self_property.and_then(move |commit| Ok(is_contained(commit.id())?));
+            Ok(out_property.into_dyn_wrapped())
+        },
+    );
+    map.insert(
+        "revset",
+        |language, diagnostics, _build_ctx, self_property, function| {
+            let [revset_node] = function.expect_exact_arguments()?;
+
+            let expression =
+                template_parser::expect_string_literal_with(revset_node, |revset, span| {
+                    parse_user_revset(language, diagnostics, span, revset)
+                })?;
+
+            let repo = language.repo;
+            let extensions = language.revset_parse_context.extensions;
+            let id_prefix_content = language.id_prefix_context;
+            let out_property = self_property.and_then(move |commit| {
+                let symbol_resolver: &dyn SymbolResolverExtension = &SingleSymbolResolver {
+                    symbol: "self",
+                    commit: commit.id().clone(),
+                };
+                let symbol_resolver = revset_util::default_symbol_resolver(
+                    repo,
+                    extensions
+                        .symbol_resolvers()
+                        .iter()
+                        .map(|x| x.as_ref())
+                        .chain([symbol_resolver]),
+                    id_prefix_content,
+                );
+                let commits: Vec<Commit> = expression
+                    .resolve_user_expression(repo, &symbol_resolver)?
+                    .evaluate(repo)?
+                    .iter()
+                    .map(|id| -> Result<_, TemplatePropertyError> {
+                        Ok(commit.store().get_commit(&id?)?)
+                    })
+                    .try_collect()?;
+                Ok(commits)
+            });
             Ok(out_property.into_dyn_wrapped())
         },
     );
@@ -1113,12 +1156,12 @@ fn evaluate_revset_expression<'repo>(
     Ok(revset)
 }
 
-fn evaluate_user_revset<'repo>(
+fn parse_user_revset<'repo>(
     language: &CommitTemplateLanguage<'repo>,
     diagnostics: &mut TemplateDiagnostics,
     span: pest::Span<'_>,
     revset: &str,
-) -> Result<Box<dyn Revset + 'repo>, TemplateParseError> {
+) -> Result<Rc<UserRevsetExpression>, TemplateParseError> {
     let mut inner_diagnostics = RevsetDiagnostics::new();
     let (expression, modifier) = revset::parse_with_modifier(
         &mut inner_diagnostics,
@@ -1130,8 +1173,7 @@ fn evaluate_user_revset<'repo>(
         TemplateParseError::expression("In revset expression", span).with_source(diag)
     });
     let (None | Some(RevsetModifier::All)) = modifier;
-
-    evaluate_revset_expression(language, span, &expression)
+    Ok(expression)
 }
 
 /// Bookmark or tag name with metadata.

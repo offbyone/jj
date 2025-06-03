@@ -30,6 +30,7 @@ use jj_lib::ref_name::RefNameBuf;
 use jj_lib::repo::Repo;
 use jj_lib::revset;
 use jj_lib::revset::DefaultSymbolResolver;
+use jj_lib::revset::PartialSymbolResolver;
 use jj_lib::revset::ResolvedRevsetExpression;
 use jj_lib::revset::Revset;
 use jj_lib::revset::RevsetAliasesMap;
@@ -205,9 +206,9 @@ pub fn load_revset_aliases(
 
 /// Wraps the given `IdPrefixContext` in `SymbolResolver` to be passed in to
 /// `evaluate()`.
-pub fn default_symbol_resolver<'a>(
+pub fn default_symbol_resolver<'a, 'e, E: AsRef<dyn SymbolResolverExtension> + ?Sized + 'e>(
     repo: &'a dyn Repo,
-    extensions: &[impl AsRef<dyn SymbolResolverExtension>],
+    extensions: impl IntoIterator<Item = &'e E>,
     id_prefix_context: &'a IdPrefixContext,
 ) -> DefaultSymbolResolver<'a> {
     DefaultSymbolResolver::new(repo, extensions).with_id_prefix_context(id_prefix_context)
@@ -369,4 +370,31 @@ pub fn parse_bookmark_name(text: &str) -> Result<RefNameBuf, BookmarkNameParseEr
             input: text.to_owned(),
             source,
         })
+}
+
+/// A symbol resolver extension that resolves the given symbol to the given
+/// commit.
+#[derive(Debug, Clone)]
+pub struct SingleSymbolResolver {
+    pub symbol: &'static str,
+    pub commit: CommitId,
+}
+
+impl SymbolResolverExtension for SingleSymbolResolver {
+    fn new_resolvers<'a>(
+        &self,
+        _: &'a dyn Repo,
+    ) -> Vec<Box<dyn revset::PartialSymbolResolver + 'a>> {
+        vec![Box::new(self.clone())]
+    }
+}
+
+impl PartialSymbolResolver for SingleSymbolResolver {
+    fn resolve_symbol(
+        &self,
+        _: &dyn Repo,
+        symbol: &str,
+    ) -> Result<Option<Vec<CommitId>>, revset::RevsetResolutionError> {
+        Ok((symbol == self.symbol).then(|| vec![self.commit.clone()]))
+    }
 }
