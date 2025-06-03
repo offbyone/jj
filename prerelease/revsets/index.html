@@ -2020,13 +2020,13 @@ aren't included in <code>remote_bookmarks()</code>.</p>
 </li>
 <li>
 <p><code>heads(x)</code>: Commits in <code>x</code> that are not ancestors of other commits in <code>x</code>.
-  Note that this is different from
+  Equivalent to <code>x ~ ::x-</code>. Note that this is different from
   <a href="https://repo.mercurial-scm.org/hg/help/revsets">Mercurial's</a> <code>heads(x)</code>
   function, which is equivalent to <code>x ~ x-</code>.</p>
 </li>
 <li>
 <p><code>roots(x)</code>: Commits in <code>x</code> that are not descendants of other commits in <code>x</code>.
-  Note that this is different from
+  Equivalent to <code>x ~ x+::</code>. Note that this is different from
   <a href="https://repo.mercurial-scm.org/hg/help/revsets">Mercurial's</a> <code>roots(x)</code>
   function, which is equivalent to <code>x ~ x+</code>.</p>
 </li>
