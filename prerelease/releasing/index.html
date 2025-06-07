@@ -1628,7 +1628,7 @@
 
 <h1 id="how-to-do-a-release">How to do a release<a class="headerlink" href="#how-to-do-a-release" title="Permanent link">&para;</a></h1>
 <h2 id="update-changelog-and-cargo-versions">Update changelog and Cargo versions<a class="headerlink" href="#update-changelog-and-cargo-versions" title="Permanent link">&para;</a></h2>
-<p>Send a PR similar to https://github.com/jj-vcs/jj/pull/5215. Feel free to
+<p>Send a PR similar to <a href="https://github.com/jj-vcs/jj/pull/5215">https://github.com/jj-vcs/jj/pull/5215</a>. Feel free to
 copy-edit the changelog in order to:</p>
 <ul>
 <li>Populate "Release highlights" if relevant</li>
@@ -1651,17 +1651,17 @@ to run something like this:</p>
 <span class="s1">&#39;</span>
 gh<span class="w"> </span>api<span class="w"> </span><span class="s2">&quot;/repos/jj-vcs/jj/compare/</span><span class="nv">$root</span><span class="s2">...main&quot;</span><span class="w"> </span>--paginate<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-sr<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$filter</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-f
 </code></pre></div>
-<p>https://docs.github.com/en/rest/commits/commits?apiVersion=2022-11-28#compare-two-commits</p>
+<p><a href="https://docs.github.com/en/rest/commits/commits?apiVersion=2022-11-28#compare-two-commits">https://docs.github.com/en/rest/commits/commits?apiVersion=2022-11-28#compare-two-commits</a></p>
 <p>Alternatively, the list can be produced locally:</p>
 <div class="highlight"><pre><span></span><code>jj<span class="w"> </span>log<span class="w"> </span>--no-graph<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;heads(tags())..main&#39;</span><span class="w"> </span>-T<span class="w"> </span><span class="s1">&#39;&quot;* &quot; ++ author ++ &quot;\n&quot;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-fu
 </code></pre></div>
 <p>Then try to find the right GitHub username for each person and copy their name
 and username from the GitHub page for the person
-(e.g. https://github.com/martinvonz).</p>
+(e.g. <a href="https://github.com/martinvonz">https://github.com/martinvonz</a>).</p>
 <p>Get the PR through review and get it merged as usual.</p>
 <h2 id="create-a-tag-and-a-github-release">Create a tag and a GitHub release<a class="headerlink" href="#create-a-tag-and-a-github-release" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Go to https://github.com/jj-vcs/jj/releases and click "Draft a new release"</li>
+<li>Go to <a href="https://github.com/jj-vcs/jj/releases">https://github.com/jj-vcs/jj/releases</a> and click "Draft a new release"</li>
 <li>Click "Choose a tag" and enter "v0.\&lt;number&gt;.0" (e.g. "v0.26.0") to create a
    new tag</li>
 <li>Click "Target", then "Recent commits", and select the commit from your merged

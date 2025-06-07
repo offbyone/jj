@@ -1710,10 +1710,10 @@ parts came from.</p>
 <h2 id="ignored-files">Ignored files<a class="headerlink" href="#ignored-files" title="Permanent link">&para;</a></h2>
 <p>You probably don't want build outputs and temporary files to be under version
 control. You can tell Jujutsu to not automatically track certain files by using
-<code>.gitignore</code> files (there's no such thing as <code>.jjignore</code> yet).
-See https://git-scm.com/docs/gitignore for details about the format.
-<code>.gitignore</code> files are supported in any directory in the working copy, as well
-as in <code>$XDG_CONFIG_HOME/git/ignore</code> and <code>$GIT_DIR/info/exclude</code>.</p>
+<code>.gitignore</code> files (there's no such thing as <code>.jjignore</code> yet). See
+<a href="https://git-scm.com/docs/gitignore">https://git-scm.com/docs/gitignore</a> for details about the format. <code>.gitignore</code>
+files are supported in any directory in the working copy, as well as in
+<code>$XDG_CONFIG_HOME/git/ignore</code> and <code>$GIT_DIR/info/exclude</code>.</p>
 <p>Ignored files are never tracked automatically (regardless of the value of
 <code>snapshot.auto-track</code>), but files that were already tracked will remain tracked
 even if they match ignore patterns. You can untrack such files with the
