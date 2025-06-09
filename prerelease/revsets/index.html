@@ -1819,7 +1819,7 @@ only symbols.</p>
 <li><code>x::</code>: Descendants of <code>x</code>, including the commits in <code>x</code> itself. Shorthand for
   <code>x::visible_heads()</code>.</li>
 <li><code>x..</code>: Revisions that are not ancestors of <code>x</code>. Shorthand for
-  <code>x..visible_heads()</code>.</li>
+  <code>x..visible_heads()</code>. Equivalent to <code>~::x</code>.</li>
 <li><code>::x</code>: Ancestors of <code>x</code>, including the commits in <code>x</code> itself. Shorthand for
   <code>root()::x</code>.</li>
 <li><code>..x</code>: Ancestors of <code>x</code>, including the commits in <code>x</code> itself, but excluding
