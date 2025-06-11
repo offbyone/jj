@@ -264,14 +264,16 @@ fn run_tool(
 
 /// Represents an entry in the `fix.tools` config table.
 struct ToolConfig {
+    // TODO: Print the name with the command's stderr, to clearly associate any
+    // errors/warnings with the tool and its configuration entry.
+    /// The name of the tool.
+    name: String,
     /// The command that will be run to fix a matching file.
     command: CommandNameAndArgs,
     /// The matcher that determines if this tool matches a file.
     matcher: Box<dyn Matcher>,
     /// Whether the tool is enabled
     enabled: bool,
-    // TODO: Store the `name` field here and print it with the command's stderr, to clearly
-    // associate any errors/warnings with the tool and its configuration entry.
 }
 
 /// Represents the `fix.tools` config table.
@@ -325,6 +327,7 @@ fn get_tools_config(ui: &mut Ui, settings: &UserSettings) -> Result<ToolsConfig,
             );
             print_parse_diagnostics(ui, &format!("In `fix.tools.{name}`"), &diagnostics)?;
             Ok(ToolConfig {
+                name: name.into(),
                 command: tool.command,
                 matcher: expression.to_matcher(),
                 enabled: tool.enabled,
