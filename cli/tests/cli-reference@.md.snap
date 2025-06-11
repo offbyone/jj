@@ -1107,7 +1107,8 @@ the values have the following properties:
    patterns.
  - `enabled`: Enables or disables the tool. If omitted, the tool is enabled.
    This is useful for defining disabled tools in user configuration that can
-   be enabled in individual repositories with one config setting.
+   be enabled in individual repositories with one config setting. This can
+   be overridden with the `--tool` option.
 
 For example, the following configuration defines how two code formatters
 (`clang-format` and `black`) will apply to three different file extensions
@@ -1138,6 +1139,11 @@ output of the first tool.
 ###### **Options:**
 
 * `-s`, `--source <REVSETS>` — Fix files in the specified revision(s) and their descendants. If no revisions are specified, this defaults to the `revsets.fix` setting, or `reachable(@, mutable())` if it is not set
+* `--tool <TOOL>` — Select the tool(s) to run
+
+   This ignores the `enabled` option of the tools. For example to only use fix.tools.clang-format and clang-tidy even if they are disabled:
+
+   $ jj fix --tool clang-format --tool clang-tidy
 * `--include-unchanged-files` — Fix unchanged files in addition to changed ones. If no paths are specified, all files in the repo will be fixed
 
 

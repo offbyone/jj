@@ -107,6 +107,86 @@ fn test_config_multiple_tools() {
 }
 
 #[test]
+fn test_config_multiple_tools_override() {
+    let test_env = TestEnvironment::default();
+    test_env.run_jj_in(".", ["git", "init", "repo"]).success();
+    let work_dir = test_env.work_dir("repo");
+    let formatter_path = assert_cmd::cargo::cargo_bin("fake-formatter");
+    assert!(formatter_path.is_file());
+    let formatter = to_toml_value(formatter_path.to_str().unwrap());
+    test_env.add_config(format!(
+        r###"
+        [fix.tools.tool-1]
+        command = [{formatter}, "--uppercase"]
+        patterns = ["foo"]
+
+        [fix.tools.tool-2]
+        command = [{formatter}, "--lowercase"]
+        patterns = ["bar"]
+
+        [fix.tools.tool-3]
+        command = [{formatter}, "--reverse"]
+        patterns = ["baz"]
+        "###,
+    ));
+
+    work_dir.write_file("foo", "Foo\n");
+    work_dir.write_file("bar", "Bar\n");
+    work_dir.write_file("baz", "Baz\n");
+
+    work_dir
+        .run_jj(["fix", "--tool", "tool-1", "--tool", "tool-2"])
+        .success();
+
+    let output = work_dir.run_jj(["file", "show", "foo", "-r", "@"]);
+    insta::assert_snapshot!(output, @r"
+    FOO
+    [EOF]
+    ");
+    let output = work_dir.run_jj(["file", "show", "bar", "-r", "@"]);
+    insta::assert_snapshot!(output, @r"
+    bar
+    [EOF]
+    ");
+    let output = work_dir.run_jj(["file", "show", "baz", "-r", "@"]);
+    insta::assert_snapshot!(output, @r"
+    Baz
+    [EOF]
+    ");
+}
+
+#[test]
+fn test_config_multiple_tools_unknown() {
+    let test_env = TestEnvironment::default();
+    test_env.run_jj_in(".", ["git", "init", "repo"]).success();
+    let work_dir = test_env.work_dir("repo");
+    let formatter_path = assert_cmd::cargo::cargo_bin("fake-formatter");
+    assert!(formatter_path.is_file());
+    let formatter = to_toml_value(formatter_path.to_str().unwrap());
+    test_env.add_config(format!(
+        r###"
+        [fix.tools.tool-1]
+        command = [{formatter}, "--uppercase"]
+        patterns = ["foo"]
+        "###,
+    ));
+
+    work_dir.write_file("foo", "Foo\n");
+    work_dir.write_file("bar", "Bar\n");
+    work_dir.write_file("baz", "Baz\n");
+
+    let output = work_dir.run_jj(["fix", "--tool", "tool-2"]);
+
+    insta::assert_snapshot!(output, @r"
+    ------- stderr -------
+    Warning: Unknown tool: tool-2
+    Error: At least one `--tool` must be in `fix.tools`.
+    [EOF]
+    [exit status: 2]
+    ");
+}
+
+#[test]
 fn test_config_multiple_tools_with_same_name() {
     let mut test_env = TestEnvironment::default();
     test_env.run_jj_in(".", ["git", "init", "repo"]).success();

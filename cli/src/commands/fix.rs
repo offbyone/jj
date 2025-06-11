@@ -13,7 +13,9 @@
 // limitations under the License.
 
 use std::collections::HashMap;
+use std::collections::HashSet;
 use std::io::Write as _;
+use std::ops::Deref;
 use std::path::Path;
 use std::process::Stdio;
 
@@ -38,6 +40,7 @@ use tracing::instrument;
 
 use crate::cli_util::CommandHelper;
 use crate::cli_util::RevisionArg;
+use crate::command_error::cli_error;
 use crate::command_error::config_error;
 use crate::command_error::print_parse_diagnostics;
 use crate::command_error::CommandError;
@@ -78,7 +81,8 @@ use crate::ui::Ui;
 ///    patterns.
 ///  - `enabled`: Enables or disables the tool. If omitted, the tool is enabled.
 ///    This is useful for defining disabled tools in user configuration that can
-///    be enabled in individual repositories with one config setting.
+///    be enabled in individual repositories with one config setting. This can
+///    be overridden with the `--tool` option.
 ///
 /// For example, the following configuration defines how two code formatters
 /// (`clang-format` and `black`) will apply to three different file extensions
@@ -112,6 +116,14 @@ pub(crate) struct FixArgs {
         add = ArgValueCompleter::new(complete::revset_expression_mutable),
     )]
     source: Vec<RevisionArg>,
+    /// Select the tool(s) to run
+    ///
+    /// This ignores the `enabled` option of the tools. For example to only use
+    /// fix.tools.clang-format and clang-tidy even if they are disabled:
+    ///
+    /// $ jj fix --tool clang-format --tool clang-tidy
+    #[arg(long = "tool", value_name = "TOOL")]
+    pub tools: Vec<String>,
     /// Fix only these paths
     #[arg(value_name = "FILESETS", value_hint = clap::ValueHint::AnyPath)]
     paths: Vec<String>,
@@ -129,7 +141,11 @@ pub(crate) fn cmd_fix(
 ) -> Result<(), CommandError> {
     let mut workspace_command = command.workspace_helper(ui)?;
     let workspace_root = workspace_command.workspace_root().to_owned();
-    let tools_config = get_tools_config(ui, workspace_command.settings())?;
+    let tools_config = get_tools_config(
+        ui,
+        workspace_command.settings(),
+        &args.tools.iter().map(Deref::deref).collect(),
+    )?;
     let root_commits: Vec<CommitId> = if args.source.is_empty() {
         let revs = workspace_command.settings().get_string("revsets.fix")?;
         workspace_command.parse_revset(ui, &RevisionArg::from(revs))?
@@ -302,7 +318,11 @@ fn default_tool_enabled() -> bool {
 /// Fails if any of the commands or patterns are obviously unusable, but does
 /// not check for issues that might still occur later like missing executables.
 /// This is a place where we could fail earlier in some cases, though.
-fn get_tools_config(ui: &mut Ui, settings: &UserSettings) -> Result<ToolsConfig, CommandError> {
+fn get_tools_config(
+    ui: &mut Ui,
+    settings: &UserSettings,
+    enabled: &HashSet<&str>,
+) -> Result<ToolsConfig, CommandError> {
     let mut tools: Vec<ToolConfig> = settings
         .table_keys("fix.tools")
         // Sort keys early so errors are deterministic.
@@ -337,12 +357,27 @@ fn get_tools_config(ui: &mut Ui, settings: &UserSettings) -> Result<ToolsConfig,
     if tools.is_empty() {
         return Err(config_error("No `fix.tools` are configured"));
     }
-    tools.retain(|t| t.enabled);
-    if tools.is_empty() {
-        Err(config_error(
-            "At least one entry of `fix.tools` must be enabled.".to_string(),
-        ))
+    if !enabled.is_empty() {
+        for &tool in enabled {
+            if !tools.iter().find(|t| t.name == tool).is_some() {
+                writeln!(ui.warning_default(), "Unknown tool: {tool}")?;
+            }
+        }
+
+        tools.retain(|t| enabled.contains(t.name.as_str()));
+        if tools.is_empty() {
+            return Err(cli_error(
+                "At least one `--tool` must be in `fix.tools`.".to_string(),
+            ));
+        }
     } else {
-        Ok(ToolsConfig { tools })
+        tools.retain(|t| t.enabled);
+        if tools.is_empty() {
+            return Err(config_error(
+                "At least one entry of `fix.tools` must be enabled.".to_string(),
+            ));
+        }
     }
+
+    Ok(ToolsConfig { tools })
 }
