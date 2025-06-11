@@ -135,7 +135,7 @@ impl FileAnnotator {
     ///
     /// If the file is not found, the result would be empty.
     pub fn from_commit(starting_commit: &Commit, file_path: &RepoPath) -> BackendResult<Self> {
-        let source = Source::load(starting_commit, file_path)?;
+        let source = Source::load(starting_commit, file_path).block_on()?;
         Ok(Self::with_source(starting_commit.id(), file_path, source))
     }
 
@@ -231,10 +231,10 @@ impl Source {
         }
     }
 
-    fn load(commit: &Commit, file_path: &RepoPath) -> Result<Self, BackendError> {
-        let tree = commit.tree()?;
-        let file_value = tree.path_value_async(file_path).block_on()?;
-        let text = get_file_contents(commit.store(), file_path, file_value).block_on()?;
+    async fn load(commit: &Commit, file_path: &RepoPath) -> Result<Self, BackendError> {
+        let tree = commit.tree_async().await?;
+        let file_value = tree.path_value_async(file_path).await?;
+        let text = get_file_contents(commit.store(), file_path, file_value).await?;
         Ok(Self::new(text))
     }
 
