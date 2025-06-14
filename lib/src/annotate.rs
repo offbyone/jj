@@ -26,6 +26,8 @@ use std::rc::Rc;
 
 use bstr::BStr;
 use bstr::BString;
+use futures::future::try_join_all;
+use futures::StreamExt as _;
 use itertools::Itertools as _;
 use pollster::FutureExt as _;
 
@@ -182,7 +184,7 @@ impl FileAnnotator {
         repo: &dyn Repo,
         domain: &Rc<ResolvedRevsetExpression>,
     ) -> Result<(), RevsetEvaluationError> {
-        process_commits(repo, &mut self.state, domain, &self.file_path)
+        process_commits(repo, &mut self.state, domain, &self.file_path).block_on()
     }
 
     /// Remaining commit ids to visit from.
@@ -258,7 +260,7 @@ struct FileVersion {
 
 /// Starting from the source commits, compute changes at that commit relative to
 /// its direct parents, updating the mappings as we go.
-fn process_commits(
+async fn process_commits(
     repo: &dyn Repo,
     state: &mut AnnotationState,
     domain: &Rc<ResolvedRevsetExpression>,
@@ -276,26 +278,27 @@ fn process_commits(
         .evaluate(repo)?;
 
     state.num_unresolved_roots = 0;
-    let node_iter = revset.iter_graph().map(|node| {
+    let node_futures_iter = revset.iter_graph().map(|node| async {
         let (commit_id, edge_list) = node?;
-        let mut parents = vec![];
-        for parent_edge in edge_list {
-            let commit = repo.store().get_commit(&parent_edge.target)?;
-            let tree = commit.tree()?;
-            let file_value = tree.path_value(file_name)?;
-            let parent = FileVersion {
-                commit_id: parent_edge.target,
+        let parent_futures = edge_list.into_iter().map(|edge| async move {
+            let parent_commit = repo.store().get_commit_async(&edge.target).await?;
+            let tree = parent_commit.tree_async().await?;
+            let file_value = tree.path_value_async(file_name).await?;
+            Ok::<_, RevsetEvaluationError>(FileVersion {
+                commit_id: edge.target,
                 file_name: file_name.to_owned(),
                 file_value,
-                is_missing: parent_edge.edge_type == GraphEdgeType::Missing,
-            };
-            parents.push(parent);
-        }
+                is_missing: edge.edge_type == GraphEdgeType::Missing,
+            })
+        });
+        let parents: Vec<FileVersion> = try_join_all(parent_futures).await?;
         Ok::<_, RevsetEvaluationError>((commit_id, parents))
     });
-    for node in node_iter {
+    let mut node_stream =
+        futures::stream::iter(node_futures_iter).buffered(repo.store().concurrency());
+    while let Some(node) = node_stream.next().await {
         let (commit_id, parents) = node?;
-        process_commit(repo, state, &commit_id, parents)?;
+        process_commit(repo, state, &commit_id, parents).await?;
         if state.commit_source_map.len() == state.num_unresolved_roots {
             // No more lines to propagate to ancestors.
             break;
@@ -307,7 +310,7 @@ fn process_commits(
 /// For a given commit, for each parent, we compare the version in the parent
 /// tree with the current version, updating the mappings for any lines in
 /// common. If the parent doesn't have the file, we skip it.
-fn process_commit(
+async fn process_commit(
     repo: &dyn Repo,
     state: &mut AnnotationState,
     current_commit_id: &CommitId,
@@ -321,8 +324,8 @@ fn process_commit(
         let parent_source = match state.commit_source_map.entry(parent.commit_id.clone()) {
             hash_map::Entry::Occupied(entry) => entry.into_mut(),
             hash_map::Entry::Vacant(entry) => {
-                let text = get_file_contents(repo.store(), &parent.file_name, parent.file_value)
-                    .block_on()?;
+                let text =
+                    get_file_contents(repo.store(), &parent.file_name, parent.file_value).await?;
                 entry.insert(Source::new(text))
             }
         };
