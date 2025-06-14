@@ -40,7 +40,6 @@ use crate::conflicts::MaterializedTreeValue;
 use crate::diff::Diff;
 use crate::diff::DiffHunkKind;
 use crate::fileset::FilesetExpression;
-use crate::graph::GraphEdge;
 use crate::graph::GraphEdgeType;
 use crate::merge::MergedTreeValue;
 use crate::repo::Repo;
@@ -248,6 +247,15 @@ impl Source {
 /// original file.
 type OriginalLineMap = Vec<Result<CommitId, CommitId>>;
 
+/// Information about a version of a file.
+struct FileVersion {
+    commit_id: CommitId,
+    file_name: RepoPathBuf,
+    // TODO: Make this a MaterializedTreeValue
+    file_value: MergedTreeValue,
+    is_missing: bool,
+}
+
 /// Starting from the source commits, compute changes at that commit relative to
 /// its direct parents, updating the mappings as we go.
 fn process_commits(
@@ -270,7 +278,22 @@ fn process_commits(
     state.num_unresolved_roots = 0;
     for node in revset.iter_graph() {
         let (commit_id, edge_list) = node?;
-        process_commit(repo, file_name, state, &commit_id, &edge_list)?;
+
+        let mut parents = vec![];
+        for parent_edge in edge_list {
+            let commit = repo.store().get_commit(&parent_edge.target)?;
+            let tree = commit.tree()?;
+            let file_value = tree.path_value(file_name)?;
+            let parent = FileVersion {
+                commit_id: parent_edge.target,
+                file_name: file_name.to_owned(),
+                file_value,
+                is_missing: parent_edge.edge_type == GraphEdgeType::Missing,
+            };
+            parents.push(parent);
+        }
+
+        process_commit(repo, state, &commit_id, parents)?;
         if state.commit_source_map.len() == state.num_unresolved_roots {
             // No more lines to propagate to ancestors.
             break;
@@ -284,22 +307,21 @@ fn process_commits(
 /// common. If the parent doesn't have the file, we skip it.
 fn process_commit(
     repo: &dyn Repo,
-    file_name: &RepoPath,
     state: &mut AnnotationState,
     current_commit_id: &CommitId,
-    edges: &[GraphEdge<CommitId>],
+    parents: Vec<FileVersion>,
 ) -> Result<(), BackendError> {
     let Some(mut current_source) = state.commit_source_map.remove(current_commit_id) else {
         return Ok(());
     };
 
-    for parent_edge in edges {
-        let parent_commit_id = &parent_edge.target;
-        let parent_source = match state.commit_source_map.entry(parent_commit_id.clone()) {
+    for parent in parents {
+        let parent_source = match state.commit_source_map.entry(parent.commit_id.clone()) {
             hash_map::Entry::Occupied(entry) => entry.into_mut(),
             hash_map::Entry::Vacant(entry) => {
-                let commit = repo.store().get_commit(entry.key())?;
-                entry.insert(Source::load(&commit, file_name)?)
+                let text = get_file_contents(repo.store(), &parent.file_name, parent.file_value)
+                    .block_on()?;
+                entry.insert(Source::new(text))
             }
         };
 
@@ -336,8 +358,8 @@ fn process_commit(
             itertools::merge(parent_source.line_map.iter().copied(), new_parent_line_map).collect()
         };
         if parent_source.line_map.is_empty() {
-            state.commit_source_map.remove(parent_commit_id);
-        } else if parent_edge.edge_type == GraphEdgeType::Missing {
+            state.commit_source_map.remove(&parent.commit_id);
+        } else if parent.is_missing {
             // If an omitted parent had the file, leave these lines unresolved.
             // The origin of the unresolved lines is represented as
             // Err(root_commit_id).
