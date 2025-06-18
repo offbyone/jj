@@ -2457,6 +2457,7 @@ type</a> are available as keywords. For example,
   nonzero display width may break wrapping, indentation etc.</li>
 <li><code>stringify(content: Template) -&gt; String</code>: Format <code>content</code> to string. This
   effectively removes color labels.</li>
+<li><code>json(value: Serialize) -&gt; String</code>: Serialize <code>value</code> in JSON format.</li>
 <li><code>if(condition: Boolean, then: Template[, else: Template]) -&gt; Template</code>:
   Conditionally evaluate <code>then</code>/<code>else</code> template content.</li>
 <li><code>coalesce(content: Template...) -&gt; Template</code>: Returns the first <strong>non-empty</strong>
