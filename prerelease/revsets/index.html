@@ -813,6 +813,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#hidden-revisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hidden revisions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#symbols" class="md-nav__link">
     <span class="md-ellipsis">
       Symbols
@@ -1711,6 +1720,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#hidden-revisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hidden revisions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#symbols" class="md-nav__link">
     <span class="md-ellipsis">
       Symbols
@@ -1846,9 +1864,14 @@ consists of symbols, operators, and functions.</p>
 an error to pass a revset that resolves to more than one commit (or zero
 commits) to such commands.</p>
 <p>The words "revisions" and "commits" are used interchangeably in this document.</p>
+<h2 id="hidden-revisions">Hidden revisions<a class="headerlink" href="#hidden-revisions" title="Permanent link">&para;</a></h2>
 <p>Most revsets search only the <a href="../glossary/#visible-commits">visible commits</a>.
 Other commits are only included if you explicitly mention them (e.g. by commit
-ID or a Git ref pointing to them).</p>
+ID, <code>&lt;name&gt;@&lt;remote&gt;</code> symbol, or <code>at_operation()</code> function).</p>
+<p>If hidden commits are specified, their ancestors also become available to the
+search space. They are included in <code>all()</code>, <code>x..</code>, <code>~x</code>, etc., but not in
+<code>..visible_heads()</code>, etc. For example, <code>hidden_id | all()</code> is equivalent to
+<code>hidden_id | ::(hidden_id | visible_heads())</code>.</p>
 <h2 id="symbols">Symbols<a class="headerlink" href="#symbols" title="Permanent link">&para;</a></h2>
 <p>The <code>@</code> expression refers to the working copy commit in the current workspace.
 Use <code>&lt;workspace name&gt;@</code> to refer to the working-copy commit in another
@@ -1876,10 +1899,10 @@ only symbols.</p>
 <ul>
 <li><code>x-</code>: Parents of <code>x</code>, can be empty.</li>
 <li><code>x+</code>: Children of <code>x</code>, can be empty.</li>
-<li><code>x::</code>: Descendants of <code>x</code>, including the commits in <code>x</code> itself. Shorthand for
-  <code>x::visible_heads()</code>.</li>
-<li><code>x..</code>: Revisions that are not ancestors of <code>x</code>. Shorthand for
-  <code>x..visible_heads()</code>. Equivalent to <code>~::x</code>.</li>
+<li><code>x::</code>: Descendants of <code>x</code>, including the commits in <code>x</code> itself. Equivalent to
+  <code>x::visible_heads()</code> if no hidden revisions are mentioned.</li>
+<li><code>x..</code>: Revisions that are not ancestors of <code>x</code>. Equivalent to <code>~::x</code>, and
+  <code>x..visible_heads()</code> if no hidden revisions are mentioned.</li>
 <li><code>::x</code>: Ancestors of <code>x</code>, including the commits in <code>x</code> itself. Shorthand for
   <code>root()::x</code>.</li>
 <li><code>..x</code>: Ancestors of <code>x</code>, including the commits in <code>x</code> itself, but excluding
@@ -1888,10 +1911,11 @@ only symbols.</p>
    to <code>x:: &amp; ::y</code>. This is what <code>git log</code> calls <code>--ancestry-path x..y</code>.</li>
 <li><code>x..y</code>: Ancestors of <code>y</code> that are not also ancestors of <code>x</code>. Equivalent to
   <code>::y ~ ::x</code>. This is what <code>git log</code> calls <code>x..y</code> (i.e. the same as we call it).</li>
-<li><code>::</code>: All visible commits in the repo. Shorthand for
-  <code>root()::visible_heads()</code>. Equivalent to <code>all()</code>.</li>
+<li><code>::</code>: All visible commits in the repo. Equivalent to <code>all()</code>, and
+  <code>root()::visible_heads()</code> if no hidden revisions are mentioned.</li>
 <li><code>..</code>: All visible commits in the repo, but excluding the root commit.
-  Shorthand for <code>root()..visible_heads()</code>. Equivalent to <code>~root()</code>.</li>
+  Equivalent to <code>~root()</code>, and <code>root()..visible_heads()</code> if no hidden revisions
+  are mentioned.</li>
 <li><code>~x</code>: Revisions that are not in <code>x</code>.</li>
 <li><code>x &amp; y</code>: Revisions that are in both <code>x</code> and <code>y</code>.</li>
 <li><code>x ~ y</code>: Revisions that are in <code>x</code> but not in <code>y</code>.</li>
@@ -2021,7 +2045,7 @@ revsets (expressions) as arguments.</p>
 <p><code>connected(x)</code>: Same as <code>x::x</code>. Useful when <code>x</code> includes several commits.</p>
 </li>
 <li>
-<p><code>all()</code>: All visible commits in the repo.</p>
+<p><code>all()</code>: All visible commits and ancestors of commits explicitly mentioned.</p>
 </li>
 <li>
 <p><code>none()</code>: No commits. This function is rarely useful; it is provided for
@@ -2073,7 +2097,8 @@ aren't included in <code>remote_bookmarks()</code>.</p>
 <p><code>git_head()</code>: The Git <code>HEAD</code> target as of the last import.</p>
 </li>
 <li>
-<p><code>visible_heads()</code>: All visible heads (same as <code>heads(all())</code>).</p>
+<p><code>visible_heads()</code>: All visible heads (same as <code>heads(all())</code> if no hidden
+  revisions are mentioned).</p>
 </li>
 <li>
 <p><code>root()</code>: The virtual commit that is the oldest ancestor of all other commits.</p>
@@ -2199,6 +2224,10 @@ is added to or removed from files under "src".</p>
 <p><code>at_operation(op, x)</code>: Evaluates <code>x</code> at the specified <a href="../glossary/#operation">operation</a>. For
   example, <code>at_operation(@-, visible_heads())</code> will return all heads which were
   visible at the previous operation.</p>
+<p>Since <code>at_operation(op, x)</code> brings all commits that were visible at the
+operation to the search space, <code>at_operation(op, x) | all()</code> is equivalent to
+<code>at_operation(op, x) | ::(at_operation(op, x | visible_heads()) |
+visible_heads())</code>.</p>
 </li>
 </ul>
 <details class="examples">
