@@ -3962,12 +3962,10 @@ command will be executed directly. For example:</p>
 </code></pre></div>
 <p>Some formatters (like <a href="https://github.com/dandavison/delta"><code>delta</code></a>) require
 git style diffs for formatting. You can configure this style of
-diff as the default with the <code>ui.diff</code> setting. For example:</p>
+diff as the default with the <code>ui.diff-formatter</code> setting. For example:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[ui]</span>
 <span class="n">pager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;delta&quot;</span>
-
-<span class="k">[ui.diff]</span>
-<span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;git&quot;</span>
+<span class="n">diff-formatter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;:git&quot;</span>
 </code></pre></div>
 <h2 id="aliases">Aliases<a class="headerlink" href="#aliases" title="Permanent link">&para;</a></h2>
 <p>You can define aliases for commands, including their arguments. For example:</p>
