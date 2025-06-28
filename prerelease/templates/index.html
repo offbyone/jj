@@ -1050,6 +1050,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#plaintext-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      PlainText type
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#refsymbol-type" class="md-nav__link">
     <span class="md-ellipsis">
       RefSymbol type
@@ -1062,6 +1071,15 @@
   <a href="#repopath-type" class="md-nav__link">
     <span class="md-ellipsis">
       RepoPath type
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serialize-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      Serialize type
     </span>
   </a>
   
@@ -2201,6 +2219,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#plaintext-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      PlainText type
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#refsymbol-type" class="md-nav__link">
     <span class="md-ellipsis">
       RefSymbol type
@@ -2213,6 +2240,15 @@
   <a href="#repopath-type" class="md-nav__link">
     <span class="md-ellipsis">
       RepoPath type
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serialize-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      Serialize type
     </span>
   </a>
   
@@ -2448,14 +2484,14 @@ type</a> are available as keywords. For example,
   Truncate <code>content</code> by removing trailing characters. The <code>content</code> shouldn't
   have newline character. If <code>ellipsis</code> is provided and <code>content</code> was truncated,
   append the <code>ellipsis</code> to the result.</li>
-<li><code>label(label: Template, content: Template) -&gt; Template</code>: Apply label to
+<li><code>label(label: PlainText, content: Template) -&gt; Template</code>: Apply label to
   the content. The <code>label</code> is evaluated as a space-separated string.</li>
 <li><code>raw_escape_sequence(content: Template) -&gt; Template</code>: Preserves any escape
   sequences in <code>content</code> (i.e., bypasses sanitization) and strips labels.
   Note: This function is intended for escape sequences and as such, its output
   is expected to be invisible / of no display width. Outputting content with
   nonzero display width may break wrapping, indentation etc.</li>
-<li><code>stringify(content: Template) -&gt; String</code>: Format <code>content</code> to string. This
+<li><code>stringify(content: PlainText) -&gt; String</code>: Format <code>content</code> to string. This
   effectively removes color labels.</li>
 <li><code>json(value: Serialize) -&gt; String</code>: Serialize <code>value</code> in JSON format.</li>
 <li><code>if(condition: Boolean, then: Template[, else: Template]) -&gt; Template</code>:
@@ -2472,6 +2508,7 @@ type</a> are available as keywords. For example,
 </ul>
 <h2 id="types">Types<a class="headerlink" href="#types" title="Permanent link">&para;</a></h2>
 <h3 id="annotationline-type"><code>AnnotationLine</code> type<a class="headerlink" href="#annotationline-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: no, <code>Template</code>: no</em></p>
 <p>The following methods are defined.</p>
 <ul>
 <li><code>.commit() -&gt; Commit</code>: Commit responsible for changing the relevant line.</li>
@@ -2481,8 +2518,10 @@ type</a> are available as keywords. For example,
   references the same commit.</li>
 </ul>
 <h3 id="boolean-type"><code>Boolean</code> type<a class="headerlink" href="#boolean-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: yes, <code>Serialize</code>: yes, <code>Template</code>: yes</em></p>
 <p>No methods are defined. Can be constructed with <code>false</code> or <code>true</code> literal.</p>
 <h3 id="commit-type"><code>Commit</code> type<a class="headerlink" href="#commit-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: yes, <code>Template</code>: no</em></p>
 <p>This type cannot be printed. The following methods are defined.</p>
 <ul>
 <li><code>.description() -&gt; String</code></li>
@@ -2523,6 +2562,7 @@ type</a> are available as keywords. For example,
 <li><code>.root() -&gt; Boolean</code>: True if the commit is the root commit.</li>
 </ul>
 <h3 id="changeid-type"><code>ChangeId</code> type<a class="headerlink" href="#changeid-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: yes, <code>Template</code>: yes</em></p>
 <p>The following methods are defined.</p>
 <ul>
 <li><code>.normal_hex() -&gt; String</code>: Normal hex representation (0-9a-f) instead of the
@@ -2531,12 +2571,14 @@ type</a> are available as keywords. For example,
 <li><code>.shortest([min_len: Integer]) -&gt; ShortestIdPrefix</code>: Shortest unique prefix.</li>
 </ul>
 <h3 id="commitid-type"><code>CommitId</code> type<a class="headerlink" href="#commitid-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: yes, <code>Template</code>: yes</em></p>
 <p>The following methods are defined.</p>
 <ul>
 <li><code>.short([len: Integer]) -&gt; String</code></li>
 <li><code>.shortest([min_len: Integer]) -&gt; ShortestIdPrefix</code>: Shortest unique prefix.</li>
 </ul>
 <h3 id="commitref-type"><code>CommitRef</code> type<a class="headerlink" href="#commitref-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: yes, <code>Template</code>: yes</em></p>
 <p>The following methods are defined.</p>
 <ul>
 <li><code>.name() -&gt; RefSymbol</code>: Local bookmark or tag name.</li>
@@ -2559,6 +2601,7 @@ type</a> are available as keywords. For example,
   tracking local ref.</li>
 </ul>
 <h3 id="configvalue-type"><code>ConfigValue</code> type<a class="headerlink" href="#configvalue-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: no, <code>Template</code>: yes</em></p>
 <p>This type can be printed in TOML syntax. The following methods are defined.</p>
 <ul>
 <li><code>.as_boolean() -&gt; Boolean</code>: Extract boolean.</li>
@@ -2568,6 +2611,7 @@ type</a> are available as keywords. For example,
 <li><code>.as_string_list() -&gt; List&lt;String&gt;</code>: Extract list of strings.</li>
 </ul>
 <h3 id="cryptographicsignature-type"><code>CryptographicSignature</code> type<a class="headerlink" href="#cryptographicsignature-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: no, <code>Template</code>: no</em></p>
 <p>The following methods are defined.</p>
 <ul>
 <li><code>.status() -&gt; String</code>: The signature's status (<code>"good"</code>, <code>"bad"</code>, <code>"unknown"</code>, <code>"invalid"</code>).</li>
@@ -2589,6 +2633,7 @@ checking for signature presence through boolean coercion is fast:
 </code></pre></div></p>
 </div>
 <h3 id="diffstats-type"><code>DiffStats</code> type<a class="headerlink" href="#diffstats-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: no, <code>Template</code>: yes</em></p>
 <p>This type can be printed as a histogram of the changes. The following methods
 are defined.</p>
 <ul>
@@ -2596,6 +2641,7 @@ are defined.</p>
 <li><code>.total_removed() -&gt; Integer</code>: Total number of deletions.</li>
 </ul>
 <h3 id="email-type"><code>Email</code> type<a class="headerlink" href="#email-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: yes, <code>Serialize</code>: yes, <code>Template</code>: yes</em></p>
 <p>The email field of a signature may or may not look like an email address. It may
 be empty, may not contain the symbol <code>@</code>, and could in principle contain
 multiple <code>@</code>s.</p>
@@ -2607,8 +2653,10 @@ multiple <code>@</code>s.</p>
   string.</li>
 </ul>
 <h3 id="integer-type"><code>Integer</code> type<a class="headerlink" href="#integer-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: yes, <code>Template</code>: yes</em></p>
 <p>No methods are defined.</p>
 <h3 id="list-type"><code>List</code> type<a class="headerlink" href="#list-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: yes, <code>Serialize</code>: maybe, <code>Template</code>: maybe</em></p>
 <p>A list can be implicitly converted to <code>Boolean</code>. The following methods are
 defined.</p>
 <ul>
@@ -2623,15 +2671,17 @@ defined.</p>
 <h3 id="listtrailer-type"><code>List&lt;Trailer&gt;</code> type<a class="headerlink" href="#listtrailer-type" title="Permanent link">&para;</a></h3>
 <p>The following methods are defined. See also the <code>List</code> type.</p>
 <ul>
-<li><code>.contains_key(key: Template) -&gt; Boolean</code>: True if the commit description
+<li><code>.contains_key(key: PlainText) -&gt; Boolean</code>: True if the commit description
   contains at least one trailer with the key <code>key</code>.</li>
 </ul>
 <h3 id="listtemplate-type"><code>ListTemplate</code> type<a class="headerlink" href="#listtemplate-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: no, <code>Template</code>: yes</em></p>
 <p>The following methods are defined. See also the <code>List</code> type.</p>
 <ul>
 <li><code>.join(separator: Template) -&gt; Template</code></li>
 </ul>
 <h3 id="operation-type"><code>Operation</code> type<a class="headerlink" href="#operation-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: yes, <code>Template</code>: no</em></p>
 <p>This type cannot be printed. The following methods are defined.</p>
 <ul>
 <li><code>.current_operation() -&gt; Boolean</code></li>
@@ -2644,21 +2694,27 @@ defined.</p>
 <li><code>.root() -&gt; Boolean</code>: True if the operation is the root operation.</li>
 </ul>
 <h3 id="operationid-type"><code>OperationId</code> type<a class="headerlink" href="#operationid-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: yes, <code>Template</code>: yes</em></p>
 <p>The following methods are defined.</p>
 <ul>
 <li><code>.short([len: Integer]) -&gt; String</code></li>
 </ul>
 <h3 id="option-type"><code>Option</code> type<a class="headerlink" href="#option-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: yes, <code>Serialize</code>: maybe, <code>Template</code>: maybe</em></p>
 <p>An option can be implicitly converted to <code>Boolean</code> denoting whether the
 contained value is set. If set, all methods of the contained value can be
 invoked. If not set, an error will be reported inline on method call.</p>
 <p>On comparison between two optional values or optional and non-optional values,
 unset value is not an error. Unset value is considered less than any set values.</p>
+<h3 id="plaintext-type"><code>PlainText</code> type<a class="headerlink" href="#plaintext-type" title="Permanent link">&para;</a></h3>
+<p>A <code>String</code>, or any expression that can be converted to <code>Template</code>.</p>
 <h3 id="refsymbol-type"><code>RefSymbol</code> type<a class="headerlink" href="#refsymbol-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: yes, <code>Template</code>: yes</em></p>
 <p><a href="#string-type">A <code>String</code> type</a>, but is formatted as revset symbol by quoting
 and escaping if necessary. Unlike strings, this cannot be implicitly converted
 to <code>Boolean</code>.</p>
 <h3 id="repopath-type"><code>RepoPath</code> type<a class="headerlink" href="#repopath-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: yes, <code>Template</code>: yes</em></p>
 <p>A slash-separated path relative to the repository root. The following methods
 are defined.</p>
 <ul>
@@ -2666,7 +2722,16 @@ are defined.</p>
   platform-native separator, and is relative to the current working directory.</li>
 <li><code>.parent() -&gt; Option&lt;RepoPath&gt;</code>: Parent directory path.</li>
 </ul>
+<h3 id="serialize-type"><code>Serialize</code> type<a class="headerlink" href="#serialize-type" title="Permanent link">&para;</a></h3>
+<p>An expression that can be serialized in machine-readable format such as JSON.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Field names and value types in the serialized output are usually stable
+across jj versions, but the backward compatibility isn't guaranteed. If the
+underlying data model is updated, the serialized output may change.</p>
+</div>
 <h3 id="shortestidprefix-type"><code>ShortestIdPrefix</code> type<a class="headerlink" href="#shortestidprefix-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: yes, <code>Template</code>: yes</em></p>
 <p>The following methods are defined.</p>
 <ul>
 <li><code>.prefix() -&gt; String</code></li>
@@ -2675,6 +2740,7 @@ are defined.</p>
 <li><code>.lower() -&gt; ShortestIdPrefix</code></li>
 </ul>
 <h3 id="signature-type"><code>Signature</code> type<a class="headerlink" href="#signature-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: yes, <code>Template</code>: yes</em></p>
 <p>The following methods are defined.</p>
 <ul>
 <li><code>.name() -&gt; String</code></li>
@@ -2682,6 +2748,7 @@ are defined.</p>
 <li><code>.timestamp() -&gt; Timestamp</code></li>
 </ul>
 <h3 id="sizehint-type"><code>SizeHint</code> type<a class="headerlink" href="#sizehint-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: yes, <code>Template</code>: no</em></p>
 <p>This type cannot be printed. The following methods are defined.</p>
 <ul>
 <li><code>.lower() -&gt; Integer</code>: Lower bound.</li>
@@ -2692,19 +2759,22 @@ are defined.</p>
   <code>.upper() == 0</code>.</li>
 </ul>
 <h3 id="string-type"><code>String</code> type<a class="headerlink" href="#string-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: yes, <code>Serialize</code>: yes, <code>Template</code>: yes</em></p>
 <p>A string can be implicitly converted to <code>Boolean</code>. The following methods are
 defined.</p>
 <ul>
 <li><code>.len() -&gt; Integer</code>: Length in UTF-8 bytes.</li>
-<li><code>.contains(needle: Template) -&gt; Boolean</code></li>
+<li><code>.contains(needle: PlainText) -&gt; Boolean</code></li>
 <li><code>.first_line() -&gt; String</code></li>
 <li><code>.lines() -&gt; List&lt;String&gt;</code>: Split into lines excluding newline characters.</li>
 <li><code>.upper() -&gt; String</code></li>
 <li><code>.lower() -&gt; String</code></li>
-<li><code>.starts_with(needle: Template) -&gt; Boolean</code></li>
-<li><code>.ends_with(needle: Template) -&gt; Boolean</code></li>
-<li><code>.remove_prefix(needle: Template) -&gt; String</code>: Removes the passed prefix, if present</li>
-<li><code>.remove_suffix(needle: Template) -&gt; String</code>: Removes the passed suffix, if present</li>
+<li><code>.starts_with(needle: PlainText) -&gt; Boolean</code></li>
+<li><code>.ends_with(needle: PlainText) -&gt; Boolean</code></li>
+<li><code>.remove_prefix(needle: PlainText) -&gt; String</code>: Removes the passed prefix, if
+  present.</li>
+<li><code>.remove_suffix(needle: PlainText) -&gt; String</code>: Removes the passed suffix, if
+  present.</li>
 <li><code>.trim() -&gt; String</code>: Removes leading and trailing whitespace</li>
 <li><code>.trim_start() -&gt; String</code>: Removes leading whitespace</li>
 <li><code>.trim_end() -&gt; String</code>: Removes trailing whitespace</li>
@@ -2735,8 +2805,10 @@ that don't form a valid escape sequence.</p>
 <p>A single-quoted string literal has no escape syntax. <code>'</code> can't be expressed
 inside a single-quoted string literal.</p>
 <h3 id="template-type"><code>Template</code> type<a class="headerlink" href="#template-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: no, <code>Template</code>: yes</em></p>
 <p>Most types can be implicitly converted to <code>Template</code>. No methods are defined.</p>
 <h3 id="timestamp-type"><code>Timestamp</code> type<a class="headerlink" href="#timestamp-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: yes, <code>Template</code>: yes</em></p>
 <p>The following methods are defined.</p>
 <ul>
 <li><code>.ago() -&gt; String</code>: Format as relative timestamp.</li>
@@ -2748,6 +2820,7 @@ inside a single-quoted string literal.</p>
 <li><code>.before(date: String) -&gt; Boolean</code>: True if the timestamp is before, but not including, the given date.</li>
 </ul>
 <h3 id="timestamprange-type"><code>TimestampRange</code> type<a class="headerlink" href="#timestamprange-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: yes, <code>Template</code>: yes</em></p>
 <p>The following methods are defined.</p>
 <ul>
 <li><code>.start() -&gt; Timestamp</code></li>
@@ -2755,12 +2828,14 @@ inside a single-quoted string literal.</p>
 <li><code>.duration() -&gt; String</code></li>
 </ul>
 <h3 id="trailer-type"><code>Trailer</code> type<a class="headerlink" href="#trailer-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: no, <code>Template</code>: yes</em></p>
 <p>The following methods are defined.</p>
 <ul>
 <li><code>.key() -&gt; String</code></li>
 <li><code>.value() -&gt; String</code></li>
 </ul>
 <h3 id="treediff-type"><code>TreeDiff</code> type<a class="headerlink" href="#treediff-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: no, <code>Template</code>: no</em></p>
 <p>This type cannot be printed. The following methods are defined.</p>
 <ul>
 <li><code>.files() -&gt; List&lt;TreeDiffEntry&gt;</code>: Changed files.</li>
@@ -2771,6 +2846,7 @@ inside a single-quoted string literal.</p>
 <li><code>.summary() -&gt; Template</code>: Format as a list of status code and path pairs.</li>
 </ul>
 <h3 id="treediffentry-type"><code>TreeDiffEntry</code> type<a class="headerlink" href="#treediffentry-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: no, <code>Template</code>: no</em></p>
 <p>This type cannot be printed. The following methods are defined.</p>
 <ul>
 <li><code>.path() -&gt; RepoPath</code>: Path to the entry. If the entry is a copy/rename, this
@@ -2781,6 +2857,7 @@ inside a single-quoted string literal.</p>
 <li><code>.target() -&gt; TreeEntry</code>: The target (or right) entry.</li>
 </ul>
 <h3 id="treeentry-type"><code>TreeEntry</code> type<a class="headerlink" href="#treeentry-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: no, <code>Template</code>: no</em></p>
 <p>This type cannot be printed. The following methods are defined.</p>
 <ul>
 <li><code>.path() -&gt; RepoPath</code>: Path to the entry.</li>
