@@ -2022,10 +2022,14 @@ o root()
 revsets (expressions) as arguments.</p>
 <ul>
 <li>
-<p><code>parents(x)</code>: Same as <code>x-</code>.</p>
+<p><code>parents(x[, depth])</code>: <code>parents(x)</code> is the same as <code>x-</code>.
+  <code>parents(x, depth)</code> returns the parents of <code>x</code> at the given <code>depth</code>. For
+  instance, <code>parents(x, 3)</code> is equivalent to <code>x---</code>.</p>
 </li>
 <li>
-<p><code>children(x)</code>: Same as <code>x+</code>.</p>
+<p><code>children(x[, depth])</code>: <code>children(x)</code> is the same as <code>x+</code>.
+  <code>children(x, depth)</code> returns the children of <code>x</code> at the given <code>depth</code>. For
+  instance, <code>children(x, 3)</code> is equivalent to <code>x+++</code>.</p>
 </li>
 <li>
 <p><code>ancestors(x[, depth])</code>: <code>ancestors(x)</code> is the same as <code>::x</code>.
