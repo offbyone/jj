@@ -2056,6 +2056,14 @@ revsets (expressions) as arguments.</p>
   completeness.</p>
 </li>
 <li>
+<p><code>change_id(prefix)</code>: Commits with the given change ID prefix. It is an error
+  to use a non-unique prefix. Unmatched prefix isn't an error.</p>
+</li>
+<li>
+<p><code>commit_id(prefix)</code>: Commits with the given commit ID prefix. It is an error
+  to use a non-unique prefix. Unmatched prefix isn't an error.</p>
+</li>
+<li>
 <p><code>bookmarks([pattern])</code>: All local bookmark targets. If <code>pattern</code> is specified,
   this selects the bookmarks whose name match the given <a href="#string-patterns">string
   pattern</a>. For example, <code>bookmarks(push)</code> would match the
