@@ -647,6 +647,16 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-do-i-revert-a-merge-commit-jj-revert-merge-does-nothing" class="md-nav__link">
+    <span class="md-ellipsis">
+      How do I revert a merge commit? jj revert &lt;merge&gt; does nothing
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How do I revert a merge commit? jj revert &lt;merge&gt; does nothing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#how-do-i-deal-with-divergent-changes-after-the-change-id" class="md-nav__link">
     <span class="md-ellipsis">
       How do I deal with divergent changes ('??' after the change ID)?
@@ -654,8 +664,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#how-do-i-deal-with-conflicted-bookmarks-after-bookmark-name" class="md-nav__link">
     <span class="md-ellipsis">
       How do I deal with conflicted bookmarks ('??' after bookmark name)?
@@ -663,8 +673,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#how-do-i-integrate-jujutsu-with-gerrit" class="md-nav__link">
     <span class="md-ellipsis">
       How do I integrate Jujutsu with Gerrit?
@@ -672,8 +682,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#im-experiencing-jj-command-issues-in-a-vitevitest-project-how-do-i-fix-this" class="md-nav__link">
     <span class="md-ellipsis">
       I'm experiencing jj command issues in a Vite/Vitest project, how do I fix this?
@@ -681,13 +691,18 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#i-want-to-write-a-tool-which-integrates-with-jujutsu-should-i-use-the-library-or-parse-the-cli" class="md-nav__link">
     <span class="md-ellipsis">
       I want to write a tool which integrates with Jujutsu. Should I use the library or parse the CLI?
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1988,6 +2003,16 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-do-i-revert-a-merge-commit-jj-revert-merge-does-nothing" class="md-nav__link">
+    <span class="md-ellipsis">
+      How do I revert a merge commit? jj revert &lt;merge&gt; does nothing
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How do I revert a merge commit? jj revert &lt;merge&gt; does nothing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#how-do-i-deal-with-divergent-changes-after-the-change-id" class="md-nav__link">
     <span class="md-ellipsis">
       How do I deal with divergent changes ('??' after the change ID)?
@@ -1995,8 +2020,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#how-do-i-deal-with-conflicted-bookmarks-after-bookmark-name" class="md-nav__link">
     <span class="md-ellipsis">
       How do I deal with conflicted bookmarks ('??' after bookmark name)?
@@ -2004,8 +2029,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#how-do-i-integrate-jujutsu-with-gerrit" class="md-nav__link">
     <span class="md-ellipsis">
       How do I integrate Jujutsu with Gerrit?
@@ -2013,8 +2038,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#im-experiencing-jj-command-issues-in-a-vitevitest-project-how-do-i-fix-this" class="md-nav__link">
     <span class="md-ellipsis">
       I'm experiencing jj command issues in a Vite/Vitest project, how do I fix this?
@@ -2022,13 +2047,18 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#i-want-to-write-a-tool-which-integrates-with-jujutsu-should-i-use-the-library-or-parse-the-cli" class="md-nav__link">
     <span class="md-ellipsis">
       I want to write a tool which integrates with Jujutsu. Should I use the library or parse the CLI?
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2464,6 +2494,23 @@ used by <code>jj diff -r</code> and <code>jj log -p</code> to show the changes i
 by <code>jj rebase</code> to rebase the changes in a commit. It's used in <code>jj log</code> to
 indicate which commits are empty. It's used in the <code>files()</code> revset function
 (and by <code>jj log &lt;path&gt;</code>) to find commits that modify a certain path. And so on.</p>
+<h2 id="how-do-i-revert-a-merge-commit-jj-revert-merge-does-nothing">How do I revert a merge commit? <code>jj revert &lt;merge&gt;</code> does nothing<a class="headerlink" href="#how-do-i-revert-a-merge-commit-jj-revert-merge-does-nothing" title="Permanent link">&para;</a></h2>
+<p>Instead use <code>jj restore --from &lt;first parent&gt;</code> to revert the changes merged
+from the second parent.</p>
+<p>Example:
+<div class="highlight"><pre><span></span><code>@
+|
+C
+| \
+B D
+|/
+A
+</code></pre></div>
+To revert the merge in <code>C</code>, create a new commit with <code>jj new</code> and
+then <code>jj restore --from B</code> and then describe the message
+with something like <code>jj desc -m "Revert the merge of B into D</code>. Now, commit <code>@</code>
+undoes the merge of <code>D</code> into  C<code>. If necessary, you can now rebase it
+elsewhere, e.g.</code>jj rebase -r @ -d main`.</p>
 <h3 id="how-do-i-deal-with-divergent-changes-after-the-change-id">How do I deal with divergent changes ('??' after the <a href="../glossary/#change-id">change ID</a>)?<a class="headerlink" href="#how-do-i-deal-with-divergent-changes-after-the-change-id" title="Permanent link">&para;</a></h3>
 <p>A <a href="../glossary/#divergent-change">divergent change</a> represents a change that has two
 or more visible commits associated with it. To refer to such commits, you must
