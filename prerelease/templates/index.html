@@ -1050,15 +1050,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#plaintext-type" class="md-nav__link">
-    <span class="md-ellipsis">
-      PlainText type
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#refsymbol-type" class="md-nav__link">
     <span class="md-ellipsis">
       RefSymbol type
@@ -1133,6 +1124,15 @@
         
       </ul>
     </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stringify-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stringify type
+    </span>
+  </a>
   
 </li>
         
@@ -2219,15 +2219,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#plaintext-type" class="md-nav__link">
-    <span class="md-ellipsis">
-      PlainText type
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#refsymbol-type" class="md-nav__link">
     <span class="md-ellipsis">
       RefSymbol type
@@ -2302,6 +2293,15 @@
         
       </ul>
     </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stringify-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stringify type
+    </span>
+  </a>
   
 </li>
         
@@ -2484,14 +2484,14 @@ type</a> are available as keywords. For example,
   Truncate <code>content</code> by removing trailing characters. The <code>content</code> shouldn't
   have newline character. If <code>ellipsis</code> is provided and <code>content</code> was truncated,
   append the <code>ellipsis</code> to the result.</li>
-<li><code>label(label: PlainText, content: Template) -&gt; Template</code>: Apply label to
+<li><code>label(label: Stringify, content: Template) -&gt; Template</code>: Apply label to
   the content. The <code>label</code> is evaluated as a space-separated string.</li>
 <li><code>raw_escape_sequence(content: Template) -&gt; Template</code>: Preserves any escape
   sequences in <code>content</code> (i.e., bypasses sanitization) and strips labels.
   Note: This function is intended for escape sequences and as such, its output
   is expected to be invisible / of no display width. Outputting content with
   nonzero display width may break wrapping, indentation etc.</li>
-<li><code>stringify(content: PlainText) -&gt; String</code>: Format <code>content</code> to string. This
+<li><code>stringify(content: Stringify) -&gt; String</code>: Format <code>content</code> to string. This
   effectively removes color labels.</li>
 <li><code>json(value: Serialize) -&gt; String</code>: Serialize <code>value</code> in JSON format.</li>
 <li><code>if(condition: Boolean, then: Template[, else: Template]) -&gt; Template</code>:
@@ -2671,7 +2671,7 @@ defined.</p>
 <h3 id="listtrailer-type"><code>List&lt;Trailer&gt;</code> type<a class="headerlink" href="#listtrailer-type" title="Permanent link">&para;</a></h3>
 <p>The following methods are defined. See also the <code>List</code> type.</p>
 <ul>
-<li><code>.contains_key(key: PlainText) -&gt; Boolean</code>: True if the commit description
+<li><code>.contains_key(key: Stringify) -&gt; Boolean</code>: True if the commit description
   contains at least one trailer with the key <code>key</code>.</li>
 </ul>
 <h3 id="listtemplate-type"><code>ListTemplate</code> type<a class="headerlink" href="#listtemplate-type" title="Permanent link">&para;</a></h3>
@@ -2706,8 +2706,6 @@ contained value is set. If set, all methods of the contained value can be
 invoked. If not set, an error will be reported inline on method call.</p>
 <p>On comparison between two optional values or optional and non-optional values,
 unset value is not an error. Unset value is considered less than any set values.</p>
-<h3 id="plaintext-type"><code>PlainText</code> type<a class="headerlink" href="#plaintext-type" title="Permanent link">&para;</a></h3>
-<p>A <code>String</code>, or any expression that can be converted to <code>Template</code>.</p>
 <h3 id="refsymbol-type"><code>RefSymbol</code> type<a class="headerlink" href="#refsymbol-type" title="Permanent link">&para;</a></h3>
 <p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: yes, <code>Template</code>: yes</em></p>
 <p><a href="#string-type">A <code>String</code> type</a>, but is formatted as revset symbol by quoting
@@ -2764,16 +2762,16 @@ underlying data model is updated, the serialized output may change.</p>
 defined.</p>
 <ul>
 <li><code>.len() -&gt; Integer</code>: Length in UTF-8 bytes.</li>
-<li><code>.contains(needle: PlainText) -&gt; Boolean</code></li>
+<li><code>.contains(needle: Stringify) -&gt; Boolean</code></li>
 <li><code>.first_line() -&gt; String</code></li>
 <li><code>.lines() -&gt; List&lt;String&gt;</code>: Split into lines excluding newline characters.</li>
 <li><code>.upper() -&gt; String</code></li>
 <li><code>.lower() -&gt; String</code></li>
-<li><code>.starts_with(needle: PlainText) -&gt; Boolean</code></li>
-<li><code>.ends_with(needle: PlainText) -&gt; Boolean</code></li>
-<li><code>.remove_prefix(needle: PlainText) -&gt; String</code>: Removes the passed prefix, if
+<li><code>.starts_with(needle: Stringify) -&gt; Boolean</code></li>
+<li><code>.ends_with(needle: Stringify) -&gt; Boolean</code></li>
+<li><code>.remove_prefix(needle: Stringify) -&gt; String</code>: Removes the passed prefix, if
   present.</li>
-<li><code>.remove_suffix(needle: PlainText) -&gt; String</code>: Removes the passed suffix, if
+<li><code>.remove_suffix(needle: Stringify) -&gt; String</code>: Removes the passed suffix, if
   present.</li>
 <li><code>.trim() -&gt; String</code>: Removes leading and trailing whitespace</li>
 <li><code>.trim_start() -&gt; String</code>: Removes leading whitespace</li>
@@ -2804,6 +2802,10 @@ inside a string literal, with two exceptions: unescaped <code>"</code>-s and use
 that don't form a valid escape sequence.</p>
 <p>A single-quoted string literal has no escape syntax. <code>'</code> can't be expressed
 inside a single-quoted string literal.</p>
+<h3 id="stringify-type"><code>Stringify</code> type<a class="headerlink" href="#stringify-type" title="Permanent link">&para;</a></h3>
+<p>An expression that can be converted to a <code>String</code>.</p>
+<p>Any types that can be converted to <code>Template</code> can also be <code>Stringify</code>. Unlike
+<code>Template</code>, color labels are stripped.</p>
 <h3 id="template-type"><code>Template</code> type<a class="headerlink" href="#template-type" title="Permanent link">&para;</a></h3>
 <p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: no, <code>Template</code>: yes</em></p>
 <p>Most types can be implicitly converted to <code>Template</code>. No methods are defined.</p>
