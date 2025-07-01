@@ -674,6 +674,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#im-experiencing-jj-command-issues-in-a-vitevitest-project-how-do-i-fix-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      I'm experiencing jj command issues in a Vite/Vitest project, how do I fix this?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#i-want-to-write-a-tool-which-integrates-with-jujutsu-should-i-use-the-library-or-parse-the-cli" class="md-nav__link">
     <span class="md-ellipsis">
       I want to write a tool which integrates with Jujutsu. Should I use the library or parse the CLI?
@@ -2006,6 +2015,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#im-experiencing-jj-command-issues-in-a-vitevitest-project-how-do-i-fix-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      I'm experiencing jj command issues in a Vite/Vitest project, how do I fix this?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#i-want-to-write-a-tool-which-integrates-with-jujutsu-should-i-use-the-library-or-parse-the-cli" class="md-nav__link">
     <span class="md-ellipsis">
       I want to write a tool which integrates with Jujutsu. Should I use the library or parse the CLI?
@@ -2483,6 +2501,33 @@ HEAD:refs/for/main</code>). Using a <a href="../glossary/#co-located-repos">co-l
 will make the underlying git repo directly accessible from the working
 directory.</p>
 <p>We hope to integrate with Gerrit natively in the future.</p>
+<h3 id="im-experiencing-jj-command-issues-in-a-vitevitest-project-how-do-i-fix-this">I'm experiencing <code>jj</code> command issues in a Vite/Vitest project, how do I fix this?<a class="headerlink" href="#im-experiencing-jj-command-issues-in-a-vitevitest-project-how-do-i-fix-this" title="Permanent link">&para;</a></h3>
+<p>When using Vite or Vitest in a Jujutsu repository, you may experience:</p>
+<ul>
+<li>Very slow vitest startup times</li>
+<li>Timeout errors in <code>jj</code> terminal commands</li>
+<li>Errors with 3rd party visual tools like <code>jjk</code> or <code>visual-jj</code></li>
+<li>Corrupted <code>working_copy.lock</code> files</li>
+</ul>
+<p>This happens because Vite watches the <code>.jj</code> directory where Jujutsu stores its internal state.
+This creates unnecessary overhead as Vite processes Jujutsu's frequent internal file changes,
+which can slow down both tools and occasionally cause file access conflicts.</p>
+<p><strong>Solution</strong>: Configure Vite to ignore the <code>.jj</code> directory by adding it to the
+<code>server.watch.ignored</code> array inside your Vite configuration, for example:
+<div class="highlight"><pre><span></span><code><span class="c1">// vite.config.js</span>
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="nx">defineConfig</span><span class="p">({</span>
+<span class="w">  </span><span class="c1">// ... other config like plugins, test setup, etc.</span>
+<span class="w">  </span><span class="nx">server</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">watch</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">ignored</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;**/.jj/**&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">})</span>
+</code></pre></div></p>
+<p>Note: There was a <a href="https://github.com/vitejs/vite/issues/20036">request</a> to include <code>.jj</code>
+in the default ignore list, but manual configuration remains the recommended approach.</p>
 <h3 id="i-want-to-write-a-tool-which-integrates-with-jujutsu-should-i-use-the-library-or-parse-the-cli">I want to write a tool which integrates with Jujutsu. Should I use the library or parse the CLI?<a class="headerlink" href="#i-want-to-write-a-tool-which-integrates-with-jujutsu-should-i-use-the-library-or-parse-the-cli" title="Permanent link">&para;</a></h3>
 <p>There are some trade-offs and there is no definitive answer yet.</p>
 <ul>
