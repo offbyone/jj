@@ -1449,9 +1449,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#prefix-for-generated-bookmarks-on-push" class="md-nav__link">
+  <a href="#generated-bookmark-names-on-push" class="md-nav__link">
     <span class="md-ellipsis">
-      Prefix for generated bookmarks on push
+      Generated bookmark names on push
     </span>
   </a>
   
@@ -3146,9 +3146,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#prefix-for-generated-bookmarks-on-push" class="md-nav__link">
+  <a href="#generated-bookmark-names-on-push" class="md-nav__link">
     <span class="md-ellipsis">
-      Prefix for generated bookmarks on push
+      Generated bookmark names on push
     </span>
   </a>
   
@@ -4493,13 +4493,15 @@ leave the Git-unreachable commits in your repo by setting:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[git]</span>
 <span class="n">abandon-unreachable-commits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
 </code></pre></div>
-<h3 id="prefix-for-generated-bookmarks-on-push">Prefix for generated bookmarks on push<a class="headerlink" href="#prefix-for-generated-bookmarks-on-push" title="Permanent link">&para;</a></h3>
+<h3 id="generated-bookmark-names-on-push">Generated bookmark names on push<a class="headerlink" href="#generated-bookmark-names-on-push" title="Permanent link">&para;</a></h3>
 <p><code>jj git push --change</code> generates bookmark names with a prefix of "push-" by
-default. You can pick a different prefix by setting <code>git.push-bookmark-prefix</code>. For
-example:</p>
-<div class="highlight"><pre><span></span><code><span class="k">[git]</span>
-<span class="n">push-bookmark-prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;martinvonz/push-&quot;</span>
+default. You can pick a different prefix and formatting by setting the
+<code>templates.git_push_bookmark</code> template. For example:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[templates]</span>
+<span class="n">git_push_bookmark</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&quot;martinvonz/push-&quot; ++ change_id.short()&#39;</span>
 </code></pre></div>
+<p>This template should include expressions like <code>change_id</code> to generate unique and
+stable bookmark.</p>
 <h3 id="set-of-private-commits">Set of private commits<a class="headerlink" href="#set-of-private-commits" title="Permanent link">&para;</a></h3>
 <p>You can configure the set of private commits by setting <code>git.private-commits</code> to
 a revset. The value is a revset of commits that Jujutsu will refuse to push. If

@@ -7722,8 +7722,8 @@ output of the first tool.</p>
 <p><code>-r</code>, <code>--revisions &lt;REVSETS&gt;</code> — Push bookmarks pointing to these commits (can be repeated)</p>
 </li>
 <li>
-<p><code>-c</code>, <code>--change &lt;REVSETS&gt;</code> — Push this commit by creating a bookmark based on its change ID (can be repeated)</p>
-<p>The created bookmark will be tracked automatically. Use the <code>git.push-bookmark-prefix</code> setting to change the prefix for generated names.</p>
+<p><code>-c</code>, <code>--change &lt;REVSETS&gt;</code> — Push this commit by creating a bookmark (can be repeated)</p>
+<p>The created bookmark will be tracked automatically. Use the <code>templates.git_push_bookmark</code> setting to customize the generated bookmark name. The default is <code>"push-" ++ change_id.short()</code>.</p>
 </li>
 <li>
 <p><code>--named &lt;NAME=REVISION&gt;</code> — Specify a new bookmark name and a revision to push under that name, e.g. '--named myfeature=@'</p>
