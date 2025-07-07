@@ -1199,6 +1199,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#workspaceref-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      WorkspaceRef type
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2368,6 +2377,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#workspaceref-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      WorkspaceRef type
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2534,8 +2552,7 @@ type</a> are available as keywords. For example,
 <li><code>.signature() -&gt; Option&lt;CryptographicSignature&gt;</code></li>
 <li><code>.mine() -&gt; Boolean</code>: Commits where the author's email matches the email of
   the current user.</li>
-<li><code>.working_copies() -&gt; String</code>: For multi-workspace repository, indicate
-  working-copy commit as <code>&lt;workspace name&gt;@</code>.</li>
+<li><code>.working_copies() -&gt; List&lt;WorkspaceRef&gt;</code>: For multi-workspace repositories, returns a list of workspace references for each workspace whose working-copy commit matches the current commit.</li>
 <li><code>.current_working_copy() -&gt; Boolean</code>: True for the working-copy commit of the
   current workspace.</li>
 <li><code>.bookmarks() -&gt; List&lt;CommitRef&gt;</code>: Local and remote bookmarks pointing to the
@@ -2867,6 +2884,13 @@ inside a single-quoted string literal.</p>
 <li><code>.file_type() -&gt; String</code>: One of <code>"file"</code>, <code>"symlink"</code>, <code>"tree"</code>,
   <code>"git-submodule"</code>, or <code>"conflict"</code>.</li>
 <li><code>.executable() -&gt; Boolean</code>: True if the entry is an executable file.</li>
+</ul>
+<h3 id="workspaceref-type"><code>WorkspaceRef</code> type<a class="headerlink" href="#workspaceref-type" title="Permanent link">&para;</a></h3>
+<p><em>Conversion: <code>Boolean</code>: no, <code>Serialize</code>: yes, <code>Template</code>: yes</em></p>
+<p>The following methods are defined.</p>
+<ul>
+<li><code>.name() -&gt; RefSymbol</code>: Returns the workspace name as a symbol.</li>
+<li><code>.target() -&gt; Commit</code>: Returns the working-copy commit of this workspace.</li>
 </ul>
 <h2 id="color-labels">Color labels<a class="headerlink" href="#color-labels" title="Permanent link">&para;</a></h2>
 <p>Template fragments are usually labeled with the command name, the context (or
