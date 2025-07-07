@@ -1878,9 +1878,9 @@ Use <code>&lt;workspace name&gt;@</code> to refer to the working-copy commit in 
 workspace. Use <code>&lt;name&gt;@&lt;remote&gt;</code> to refer to a remote-tracking bookmark.</p>
 <p>A full commit ID refers to a single commit. A unique prefix of the full commit
 ID can also be used. It is an error to use a non-unique prefix.</p>
-<p>A full change ID refers to all visible commits with that change ID (there is
-typically only one visible commit with a given change ID). A unique prefix of
-the full change ID can also be used. It is an error to use a non-unique prefix.</p>
+<p>A full change ID refers to a visible commit with that change ID. A unique prefix
+of the full change ID can also be used. It is an error to use a non-unique
+prefix or <a href="../glossary/#divergent-change">a divergent change ID</a>.</p>
 <p>Use <a href="../templates/#string-literals">single or double quotes</a> to prevent a symbol from being
 interpreted as an expression. For example, <code>"x-"</code> is the symbol <code>x-</code>, not the
 parents of symbol <code>x</code>. Taking shell quoting into account, you may need to use
@@ -2056,8 +2056,9 @@ revsets (expressions) as arguments.</p>
   completeness.</p>
 </li>
 <li>
-<p><code>change_id(prefix)</code>: Commits with the given change ID prefix. It is an error
-  to use a non-unique prefix. Unmatched prefix isn't an error.</p>
+<p><code>change_id(prefix)</code>: Commits with the given change ID prefix. If the specified
+  change is divergent, this resolves to multiple commits. It is an error to use a
+  non-unique prefix. Unmatched prefix isn't an error.</p>
 </li>
 <li>
 <p><code>commit_id(prefix)</code>: Commits with the given commit ID prefix. It is an error
