@@ -43,7 +43,6 @@ use crate::diff::Diff;
 use crate::diff::DiffHunkKind;
 use crate::fileset::FilesetExpression;
 use crate::graph::GraphEdgeType;
-use crate::merge::MergedTreeValue;
 use crate::repo::Repo;
 use crate::repo_path::RepoPath;
 use crate::repo_path::RepoPathBuf;
@@ -51,7 +50,6 @@ use crate::revset::ResolvedRevsetExpression;
 use crate::revset::RevsetEvaluationError;
 use crate::revset::RevsetExpression;
 use crate::revset::RevsetFilterPredicate;
-use crate::store::Store;
 
 /// Annotation results for a specific file
 #[derive(Clone, Debug)]
@@ -235,7 +233,9 @@ impl Source {
     async fn load(commit: &Commit, file_path: &RepoPath) -> Result<Self, BackendError> {
         let tree = commit.tree_async().await?;
         let file_value = tree.path_value_async(file_path).await?;
-        let text = get_file_contents(commit.store(), file_path, file_value).await?;
+        let materialized_file_value =
+            materialize_tree_value(commit.store(), file_path, file_value).await?;
+        let text = get_file_contents(file_path, materialized_file_value).await?;
         Ok(Self::new(text))
     }
 
@@ -253,8 +253,7 @@ type OriginalLineMap = Vec<Result<CommitId, CommitId>>;
 struct FileVersion {
     commit_id: CommitId,
     file_name: RepoPathBuf,
-    // TODO: Make this a MaterializedTreeValue
-    file_value: MergedTreeValue,
+    file_value: MaterializedTreeValue,
     is_missing: bool,
 }
 
@@ -284,10 +283,12 @@ async fn process_commits(
             let parent_commit = repo.store().get_commit_async(&edge.target).await?;
             let tree = parent_commit.tree_async().await?;
             let file_value = tree.path_value_async(file_name).await?;
+            let materialized_file_value =
+                materialize_tree_value(repo.store(), file_name, file_value).await?;
             Ok::<_, RevsetEvaluationError>(FileVersion {
                 commit_id: edge.target,
                 file_name: file_name.to_owned(),
-                file_value,
+                file_value: materialized_file_value,
                 is_missing: edge.edge_type == GraphEdgeType::Missing,
             })
         });
@@ -298,7 +299,7 @@ async fn process_commits(
         futures::stream::iter(node_futures_iter).buffered(repo.store().concurrency());
     while let Some(node) = node_stream.next().await {
         let (commit_id, parents) = node?;
-        process_commit(repo, state, &commit_id, parents).await?;
+        process_commit(state, &commit_id, parents).await?;
         if state.commit_source_map.len() == state.num_unresolved_roots {
             // No more lines to propagate to ancestors.
             break;
@@ -311,7 +312,6 @@ async fn process_commits(
 /// tree with the current version, updating the mappings for any lines in
 /// common. If the parent doesn't have the file, we skip it.
 async fn process_commit(
-    repo: &dyn Repo,
     state: &mut AnnotationState,
     current_commit_id: &CommitId,
     parents: Vec<FileVersion>,
@@ -324,8 +324,7 @@ async fn process_commit(
         let parent_source = match state.commit_source_map.entry(parent.commit_id.clone()) {
             hash_map::Entry::Occupied(entry) => entry.into_mut(),
             hash_map::Entry::Vacant(entry) => {
-                let text =
-                    get_file_contents(repo.store(), &parent.file_name, parent.file_value).await?;
+                let text = get_file_contents(&parent.file_name, parent.file_value).await?;
                 entry.insert(Source::new(text))
             }
         };
@@ -414,12 +413,10 @@ fn copy_same_lines_with(
 }
 
 async fn get_file_contents(
-    store: &Store,
     path: &RepoPath,
-    file_value: MergedTreeValue,
+    file_value: MaterializedTreeValue,
 ) -> Result<BString, BackendError> {
-    let effective_file_value = materialize_tree_value(store, path, file_value).await?;
-    match effective_file_value {
+    match file_value {
         MaterializedTreeValue::File(mut file) => Ok(file.read_all(path).await?.into()),
         MaterializedTreeValue::FileConflict(file) => Ok(materialize_merge_result_to_bytes(
             &file.contents,
