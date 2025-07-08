@@ -276,9 +276,8 @@ fn process_commits(
         .evaluate(repo)?;
 
     state.num_unresolved_roots = 0;
-    for node in revset.iter_graph() {
+    let node_iter = revset.iter_graph().map(|node| {
         let (commit_id, edge_list) = node?;
-
         let mut parents = vec![];
         for parent_edge in edge_list {
             let commit = repo.store().get_commit(&parent_edge.target)?;
@@ -292,7 +291,10 @@ fn process_commits(
             };
             parents.push(parent);
         }
-
+        Ok::<_, RevsetEvaluationError>((commit_id, parents))
+    });
+    for node in node_iter {
+        let (commit_id, parents) = node?;
         process_commit(repo, state, &commit_id, parents)?;
         if state.commit_source_map.len() == state.num_unresolved_roots {
             // No more lines to propagate to ancestors.
