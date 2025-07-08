@@ -2549,7 +2549,8 @@ type</a> are available as keywords. For example,
 <li><code>.parents() -&gt; List&lt;Commit&gt;</code></li>
 <li><code>.author() -&gt; Signature</code></li>
 <li><code>.committer() -&gt; Signature</code></li>
-<li><code>.signature() -&gt; Option&lt;CryptographicSignature&gt;</code></li>
+<li><code>.signature() -&gt; Option&lt;CryptographicSignature&gt;</code>: Cryptographic signature if the
+  commit was signed.</li>
 <li><code>.mine() -&gt; Boolean</code>: Commits where the author's email matches the email of
   the current user.</li>
 <li><code>.working_copies() -&gt; List&lt;WorkspaceRef&gt;</code>: For multi-workspace repositories, returns a list of workspace references for each workspace whose working-copy commit matches the current commit.</li>
