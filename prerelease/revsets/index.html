@@ -2000,6 +2000,7 @@ o root()
 <ul>
 <li><code>D::D</code> ⇒ <code>{D}</code></li>
 <li><code>B::D</code> ⇒ <code>{D,B}</code> (note that, unlike <code>B..D</code>, this includes <code>B</code> and excludes <code>C</code>)</li>
+<li><code>B::C</code> ⇒ <code>{}</code> (empty set) (note that, unlike <code>B..C</code>, this excludes <code>C</code>)</li>
 <li><code>A::D</code> ⇒ <code>{D,C,B,A}</code></li>
 <li><code>root()::D</code> ⇒ <code>{D,C,B,A,root()}</code></li>
 <li><code>none()::D</code> ⇒ <code>{}</code> (empty set)</li>
@@ -2010,6 +2011,7 @@ o root()
 <ul>
 <li><code>D..D</code> ⇒ <code>{}</code> (empty set)</li>
 <li><code>B..D</code> ⇒ <code>{D,C}</code> (note that, unlike <code>B::D</code>, this includes <code>C</code> and excludes <code>B</code>)</li>
+<li><code>B..C</code> ⇒ <code>{C}</code> (note that, unlike <code>B::C</code>, this includes <code>C</code>)</li>
 <li><code>A..D</code> ⇒ <code>{D,C,B}</code></li>
 <li><code>root()..D</code> ⇒ <code>{D,C,B,A}</code></li>
 <li><code>none()..D</code> ⇒ <code>{D,C,B,A,root()}</code></li>
