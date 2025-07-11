@@ -67,10 +67,7 @@ struct GpgEnvironment {
 
 impl GpgEnvironment {
     fn new() -> Result<Self, std::process::Output> {
-        let dir = tempfile::Builder::new()
-            .prefix("gpg-test-")
-            .tempdir()
-            .unwrap();
+        let dir = tempfile::Builder::new().prefix("jj-").tempdir().unwrap();
 
         let path = dir.path();
 
@@ -113,10 +110,7 @@ struct GpgsmEnvironment {
 
 impl GpgsmEnvironment {
     fn new() -> Result<Self, std::process::Output> {
-        let dir = tempfile::Builder::new()
-            .prefix("gpgsm-test-")
-            .tempdir()
-            .unwrap();
+        let dir = tempfile::Builder::new().prefix("jj-").tempdir().unwrap();
 
         let path = dir.path();
 
