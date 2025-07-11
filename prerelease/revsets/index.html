@@ -2393,12 +2393,11 @@ always resolves to exactly one commit. For example:</p>
 </ul>
 <h2 id="the-all-modifier">The <code>all:</code> modifier<a class="headerlink" href="#the-all-modifier" title="Permanent link">&para;</a></h2>
 <p>Certain commands (such as <code>jj rebase</code>) can take multiple revset arguments, and
-each of these may resolve to one-or-many revisions. By default, <code>jj</code> will not
+each of these may resolve to one-or-many revisions.</p>
+<p>If you set the <code>ui.always-allow-large-revsets</code> option to <code>false</code>, <code>jj</code> will not
 allow revsets that resolve to more than one revision &mdash; a so-called "large
 revset" &mdash; and will ask you to confirm that you want to proceed by
-prefixing it with the <code>all:</code> modifier.</p>
-<p>If you set the <code>ui.always-allow-large-revsets</code> option to <code>true</code>, <code>jj</code> will
-behave as though the <code>all:</code> modifier was used every time it would matter.</p>
+prefixing it with the <code>all:</code> modifier. <em>This option is planned to be removed.</em></p>
 <p>An <code>all:</code> modifier before a revset expression does not otherwise change its
 meaning. Strictly speaking, it is not part of the revset language. The notation
 is similar to the modifiers like <code>glob:</code> allowed before <a href="#string-patterns">string
@@ -2406,10 +2405,10 @@ patterns</a>.</p>
 <p>For example, <code>jj rebase -r w -d xyz+</code> will rebase <code>w</code> on top of the child of
 <code>xyz</code> as long as <code>xyz</code> has exactly one child.</p>
 <p>If <code>xyz</code> has more than one child, the <code>all:</code> modifier is <em>not</em> specified, and
-<code>ui.always-allow-large-revsets</code> is <code>false</code> (the default), <code>jj rebase -r w -d
-xyz+</code> will return an error.</p>
-<p>If <code>ui.always-allow-large-revsets</code> was <code>true</code>, the above command would act as if
-<code>all:</code> was set (see the next paragraph).</p>
+<code>ui.always-allow-large-revsets</code> is <code>false</code>, <code>jj rebase -r w -d xyz+</code> will return
+an error.</p>
+<p>If <code>ui.always-allow-large-revsets</code> was <code>true</code> (the default), the above command
+would act as if <code>all:</code> was set (see the next paragraph).</p>
 <p>With the <code>all:</code> modifier, <code>jj rebase -r w -d all:xyz+</code> will make <code>w</code> into a merge
 commit if <code>xyz</code> has more than one child. The <code>all:</code> modifier confirms that the
 user expected <code>xyz</code> to have more than one child.</p>

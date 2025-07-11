@@ -8370,9 +8370,8 @@ post-rebase versions):</p>
 J           J
 </code></pre></div>
 <p>Each revision passed to <code>-s</code> will become a direct child of the destination,
-so if you instead run <code>jj rebase -s M -s N -d O</code> (or
-<code>jj rebase -s 'all:M|N' -d O</code>) in the example above, then N' would instead
-be a direct child of O.</p>
+so if you instead run <code>jj rebase -s M -s N -d O</code> (or <code>jj rebase -s 'M|N' -d
+O</code>) in the example above, then N' would instead be a direct child of O.</p>
 <p>With <code>--branch/-b</code>, the command rebases the whole "branch" containing the
 specified revision. A "branch" is the set of revisions that includes:</p>
 <ul>

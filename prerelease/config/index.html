@@ -1091,15 +1091,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#allow-large-revsets-by-default" class="md-nav__link">
-    <span class="md-ellipsis">
-      Allow "large" revsets by default
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#pager" class="md-nav__link">
     <span class="md-ellipsis">
       Pager
@@ -2788,15 +2779,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#allow-large-revsets-by-default" class="md-nav__link">
-    <span class="md-ellipsis">
-      Allow "large" revsets by default
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#pager" class="md-nav__link">
     <span class="md-ellipsis">
       Pager
@@ -3843,19 +3825,6 @@ available.</p>
 <span class="s1">    &quot;(no sig)&quot;,</span>
 <span class="s1">  )</span>
 <span class="s1">&#39;&#39;&#39;</span>
-</code></pre></div>
-<h2 id="allow-large-revsets-by-default">Allow "large" revsets by default<a class="headerlink" href="#allow-large-revsets-by-default" title="Permanent link">&para;</a></h2>
-<p>Certain commands (such as <code>jj rebase</code>) can take multiple revset arguments, but
-default to requiring each of those revsets to expand to a <em>single</em> revision.
-This restriction can be overridden by prefixing a revset that the user wants to
-be able to expand to more than one revision with the <a href="../revsets/#the-all-modifier"><code>all:</code>
-modifier</a>.</p>
-<p>Another way you can override this check is by setting
-<code>ui.always-allow-large-revsets</code> to <code>true</code>. Then, <code>jj</code> will allow every one of
-the revset arguments of such commands to expand to any number of revisions.</p>
-<div class="highlight"><pre><span></span><code><span class="k">[ui]</span>
-<span class="c1"># Assume `all:` prefix before revsets whenever it would make a difference</span>
-<span class="n">always-allow-large-revsets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
 <h2 id="pager">Pager<a class="headerlink" href="#pager" title="Permanent link">&para;</a></h2>
 <p>The default pager is can be set via <code>ui.pager</code> or the <code>PAGER</code> environment
