@@ -42,6 +42,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 * `jj fix` now buffers lines from subprocesses' stderr streams and emits them a
   complete line at a time. Each line is prepended with the file name.
 
+* Added the `replace` method to `string` in templates
+
 ### Fixed bugs
 
 ### Packaging changes
