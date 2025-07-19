@@ -3675,8 +3675,18 @@ For the tool named <code>&lt;name&gt;</code>, command arguments can be configure
 <span class="n">diff-args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;--color=always&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;$left&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;$right&quot;</span><span class="p">]</span>
 </code></pre></div>
 <ul>
-<li><code>$left</code> and <code>$right</code> are replaced with the paths to the left and right
-  directories to diff respectively.</li>
+<li>
+<p><code>$left</code> and <code>$right</code> are replaced with the paths to the left and right
+  directories to diff respectively.</p>
+</li>
+<li>
+<p>If <code>diff-args</code> is not specified, <code>["$left", "$right"]</code> will be used by default.</p>
+</li>
+<li>
+<p>If <code>diff-args = []</code>, <code>jj</code> will refuse to use this tool for diff formatting.
+  This is a way to explicitly state that a certain tool (e.g. <code>mergiraf</code>) does
+  not work for viewing diffs.</p>
+</li>
 </ul>
 <p>By default <code>jj</code> will invoke external tools with a directory containing the left
 and right sides.  The <code>diff-invocation-mode</code> config can change this to file by file
@@ -4105,6 +4115,9 @@ the following config keys.</p>
 <li>
 <p>If no <code>edit-args</code> are specified, <code>["$left", "$right"]</code> are set by default.</p>
 </li>
+<li>
+<p>If <code>edit-args = []</code>, <code>jj</code> will refuse to use this tool for diff editing. This is a way to explicitly state that a certain tool (e.g. <code>mergiraf</code>) does not work for diff editing.</p>
+</li>
 </ul>
 <p>Finally, <code>ui.diff-editor</code> can be a list that specifies a command and its arguments.</p>
 <p>Some examples:</p>
@@ -4273,6 +4286,9 @@ to copy it to your config file verbatim, but you are welcome to customize it.)</
   length 7, but they can be longer if necessary to make parsing unambiguous.</p>
 </li>
 </ul>
+<p>Unlike <code>diff-args</code> or <code>edit-args</code>, there is no default value for <code>merge-args</code>.
+If <code>merge-args</code> are not specified, the tool cannot be used for conflict
+resolution.</p>
 <h3 id="editing-conflict-markers-with-a-tool-or-a-text-editor">Editing conflict markers with a tool or a text editor<a class="headerlink" href="#editing-conflict-markers-with-a-tool-or-a-text-editor" title="Permanent link">&para;</a></h3>
 <p>By default, the merge tool starts with an empty output file. If the tool puts
 anything into the output file and exits with the 0 exit code,
