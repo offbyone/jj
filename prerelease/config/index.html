@@ -4581,15 +4581,15 @@ you can:</p>
 <p>In large repositories, it may be beneficial to use a "filesystem monitor" to
 track changes to the working copy. This allows <code>jj</code> to take working copy
 snapshots without having to rescan the entire working copy.</p>
-<p>This is governed by the <code>core.fsmonitor</code> option. Currently, the valid values are
-<code>"none"</code> or <code>"watchman"</code>.</p>
+<p>This is governed by the <code>fsmonitor.backend</code> option. Currently, the valid values
+are <code>"none"</code> or <code>"watchman"</code>.</p>
 <h3 id="watchman">Watchman<a class="headerlink" href="#watchman" title="Permanent link">&para;</a></h3>
 <p>To configure the Watchman filesystem monitor, set
-<code>core.fsmonitor = "watchman"</code>. Ensure that you have <a href="https://facebook.github.io/watchman/docs/install">installed the Watchman
+<code>fsmonitor.backend = "watchman"</code>. Ensure that you have <a href="https://facebook.github.io/watchman/docs/install">installed the Watchman
 executable on your system</a>.</p>
 <p>You can configure <code>jj</code> to use watchman triggers to automatically create
 snapshots on filesystem changes by setting
-<code>core.watchman.register-snapshot-trigger = true</code>.</p>
+<code>fsmonitor.watchman.register-snapshot-trigger = true</code>.</p>
 <p>You can check whether Watchman is enabled and whether it is installed correctly
 using <code>jj debug watchman status</code>.</p>
 <p>Note: <code>watchman</code> heavily uses <code>inotify</code> and sets up a user watch per-file. On
