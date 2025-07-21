@@ -7158,7 +7158,22 @@ does not match the <code>jj help</code> output exactly.</p>
 </li>
 </ul>
 <h2 id="jj-commit"><code>jj commit</code><a class="headerlink" href="#jj-commit" title="Permanent link">&para;</a></h2>
-<p>Update the description and create a new change on top</p>
+<p>Update the description and create a new change on top.</p>
+<p>This command is very similar to <code>jj split</code>. Differences include:</p>
+<ul>
+<li>
+<p><code>jj commit</code> is not interactive by default (it selects all changes).</p>
+</li>
+<li>
+<p><code>jj commit</code> doesn't have a <code>-r</code> option. It always acts on the working-copy commit (@).</p>
+</li>
+<li>
+<p><code>jj split</code> (without <code>-d/-A/-B</code>) will move bookmarks forward from the old change to the child change. <code>jj commit</code> doesn't move bookmarks forward.</p>
+</li>
+<li>
+<p><code>jj split</code> allows you to move the selected changes to a different destination with <code>-d/-A/-B</code>.</p>
+</li>
+</ul>
 <p><strong>Usage:</strong> <code>jj commit [OPTIONS] [FILESETS]...</code></p>
 <h6 id="arguments_11"><strong>Arguments:</strong><a class="headerlink" href="#arguments_11" title="Permanent link">&para;</a></h6>
 <ul>
