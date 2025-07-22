@@ -1761,6 +1761,8 @@ working copy, it will implicitly be untracked.</p>
 tracked when they're added to the working copy. See the
 <a href="../filesets/">fileset documentation</a> for the syntax. Files with paths matching
 <a href="#ignored-files">ignore files</a> are never tracked automatically.</p>
+<p>If you set <code>snapshot.auto-track</code> to a non-default value, untracked files can be
+tracked with <code>jj file track</code>.</p>
 <p>You can use <code>jj file untrack</code> to untrack a file while keeping it in the working
 copy. However, first <a href="#ignored-files">ignore</a> them or remove them from the
 <code>snapshot.auto-track</code> patterns; otherwise they will be immediately tracked again.</p>

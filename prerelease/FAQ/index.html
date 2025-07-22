@@ -2264,7 +2264,8 @@ examples.</p>
 <h3 id="how-can-i-keep-my-scratch-files-in-the-repository-without-committing-them">How can I keep my scratch files in the repository without committing them?<a class="headerlink" href="#how-can-i-keep-my-scratch-files-in-the-repository-without-committing-them" title="Permanent link">&para;</a></h3>
 <p>You can set <code>snapshot.auto-track</code> to only start tracking new files matching the
 configured pattern (e.g. <code>"none()"</code>). Changes to already tracked files will
-still be snapshotted by every command.</p>
+still be snapshotted by every command. Files not matching the pattern can be
+tracked with <code>jj file track</code>.</p>
 <p>You can keep your notes and other scratch files in the repository, if you add
 a wildcard pattern to either the repo's <code>gitignore</code> or your global <code>gitignore</code>.
 Something like <code>*.scratch</code> or <code>*.scratchpad</code> should do, after that rename the
