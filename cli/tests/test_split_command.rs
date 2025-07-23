@@ -126,7 +126,6 @@ fn test_split_by_paths() {
     let output = work_dir.run_jj(["split", "-r", "@-", "."]);
     insta::assert_snapshot!(output, @r"
     ------- stderr -------
-    Warning: All changes have been selected, so the original revision will become empty
     Rebased 1 descendant commits
     Selected changes : qpvuntsm 9fd1c9e1 (no description set)
     Remaining changes: znkkpsqq 41e0da21 (empty) (no description set)
@@ -157,7 +156,6 @@ fn test_split_by_paths() {
     let output = work_dir.run_jj(["split", "-r", "@-", "nonexistent"]);
     insta::assert_snapshot!(output, @r"
     ------- stderr -------
-    Warning: No changes have been selected, so the new revision will be empty
     Rebased 1 descendant commits
     Selected changes : qpvuntsm 49416632 (empty) (no description set)
     Remaining changes: lylxulpl 718afbf5 (no description set)
