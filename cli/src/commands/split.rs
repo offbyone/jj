@@ -38,7 +38,6 @@ use crate::cli_util::DiffSelector;
 use crate::cli_util::RevisionArg;
 use crate::cli_util::WorkspaceCommandHelper;
 use crate::cli_util::WorkspaceCommandTransaction;
-use crate::command_error::user_error_with_hint;
 use crate::command_error::CommandError;
 use crate::complete;
 use crate::description_util::add_trailers;
@@ -61,9 +60,6 @@ use crate::ui::Ui;
 /// change description for each commit. If the change did not have a
 /// description, the remaining changes will not get a description, and you will
 /// be asked for a description only for the selected changes.
-///
-/// Splitting an empty commit is not supported because the same effect can be
-/// achieved with `jj new`.
 #[derive(clap::Args, Clone, Debug)]
 pub(crate) struct SplitArgs {
     /// Interactively choose which parts to split
@@ -148,15 +144,6 @@ impl SplitArgs {
         workspace_command: &WorkspaceCommandHelper,
     ) -> Result<ResolvedSplitArgs, CommandError> {
         let target_commit = workspace_command.resolve_single_rev(ui, &self.revision)?;
-        if target_commit.is_empty(workspace_command.repo().as_ref())? {
-            return Err(user_error_with_hint(
-                format!(
-                    "Refusing to split empty commit {}.",
-                    target_commit.id().hex()
-                ),
-                "Use `jj new` if you want to create another empty commit.",
-            ));
-        }
         workspace_command.check_rewritable([target_commit.id()])?;
         let matcher = workspace_command
             .parse_file_patterns(ui, &self.paths)?
