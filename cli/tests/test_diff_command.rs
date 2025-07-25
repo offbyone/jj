@@ -3839,6 +3839,9 @@ fn test_diff_revisions() {
     [EOF]
     ");
 
+    // Can diff 0 revisions
+    insta::assert_snapshot!(diff_revisions("none()"), @"");
+
     // A gap in the range is not allowed (yet at least)
     insta::assert_snapshot!(diff_revisions("A|C"), @r"
     ------- stderr -------
@@ -3885,6 +3888,71 @@ fn test_diff_revisions() {
     insta::assert_snapshot!(diff_revisions("B|C"), @r"
     B
     C
+    [EOF]
+    ");
+}
+
+// Demo the situation when we're diffing across a merge commit but not all the
+// parents of that merge commit are in the revset.
+#[test]
+fn test_diff_revisions_across_merge() {
+    let test_env = TestEnvironment::default();
+    test_env.run_jj_in(".", ["git", "init", "repo"]).success();
+    let work_dir = test_env.work_dir("repo");
+
+    //
+    // D
+    // |
+    // C
+    // |\
+    // B X
+    // | |
+    // A /
+    // |/
+    // root()
+    create_commit(&work_dir, "X", &[]);
+    create_commit(&work_dir, "A", &[]);
+    create_commit(&work_dir, "B", &["A"]);
+    create_commit(&work_dir, "C", &["B", "X"]);
+    create_commit(&work_dir, "D", &["C"]);
+
+    // The diff we're trying to get
+    insta::assert_snapshot!(work_dir.run_jj(["diff", "--name-only", "--from=A", "--to=D"]), @r"
+    B
+    C
+    D
+    X
+    [EOF]
+    ");
+    let diff_revisions = |expression: &str| -> CommandOutput {
+        work_dir.run_jj(["diff", "--name-only", "-r", expression])
+    };
+    // This actually demoes a bug, this should not include X since X is not part
+    // of the revset. However, users might still expect `jj diff -r B::D` to
+    // show the diff between A and D; once the bug is fixed, we should warn them
+    // this is not always the case.
+    insta::assert_snapshot!(diff_revisions("B::D"), @r"
+    B
+    C
+    D
+    X
+    [EOF]
+    ");
+
+    // The answer is correct, though currently that is because the bug described
+    // above is overridden by the A-B+A=A rule.
+    insta::assert_snapshot!(diff_revisions("A..D"), @r"
+    B
+    C
+    D
+    X
+    [EOF]
+    ");
+
+    // Show the difference between the two revsets used above
+    let output = work_dir.run_jj(["log", "-r=(A..D) ~ (B::D)", "-Tdescription", "--no-graph"]);
+    insta::assert_snapshot!(output, @r"
+    X
     [EOF]
     ");
 }
