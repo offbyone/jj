@@ -440,21 +440,21 @@ $ jj file show -r @- file
 Done with feature A
 ```
 
-??? info "More details on what `--restore-descendants` does"
+/// details | More details on what `--restore-descendants` does
+When we ran the `jj restore` command, the working copy change `@` was
+at commit `471` and `@` was the only child of `@-`. In this situation,
 
-    When we ran the `jj restore` command, the working copy change `@` was
-    at commit `471` and `@` was the only child of `@-`. In this situation,
+```shell
+jj restore --from b80 --into @- --restore-descendants
+```
 
-    ```shell
-    jj restore --from b80 --into @- --restore-descendants
-    ```
+is equivalent to
 
-    is equivalent to
-
-    ```shell
-    jj restore --from b80 --into @-
-    jj restore --from 471 --into @
-    ```
+```shell
+jj restore --from b80 --into @-
+jj restore --from 471 --into @
+```
+///
 
 Now, we have achieved the exact state we desired:
 

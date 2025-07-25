@@ -75,7 +75,6 @@ plugins:
 # Not all of these may be necessary, especially since the material
 # theme substitutes for some of them
 markdown_extensions:
-  - admonition
   - codehilite:
       guess_lang: false
   - extra
@@ -90,7 +89,13 @@ markdown_extensions:
       # With `truly_sane: true`, together with breakless lists, it often splits
       # a single list in two.
       truly_sane: false
-  - pymdownx.details
+  - pymdownx.blocks.admonition
+  - pymdownx.blocks.details
+  - pymdownx.blocks.tab:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
   - pymdownx.emoji:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
       emoji_index: !!python/name:material.extensions.emoji.twemoji
@@ -100,11 +105,6 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
-  - pymdownx.tabbed:
-      alternate_style: true
-      slugify: !!python/object/apply:pymdownx.slugs.slugify
-        kwds:
-          case: lower
   - sane_lists
   - toc:
       permalink: true

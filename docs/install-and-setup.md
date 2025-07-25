@@ -21,10 +21,10 @@ cargo binstall --strategies crate-meta-data jj-cli
 Without the `--strategies` option, you may get equivalent binaries that should
 be compiled from the same source code.
 
-!!! note
-
-    If you'd like to install a prerelease version, you'll need to use one of the
-    options below.
+/// note
+If you'd like to install a prerelease version, you'll need to use one of the
+options below.
+///
 
 ### Linux
 
@@ -211,89 +211,89 @@ still complete everything the static completions did, so only activate one of
 them. Please let us know if you encounter any issues, so we can ensure a smooth
 transition once we default to these new completions.
 
-!!! info "Why are the improved completions not the default?"
-
-    To generate the dynamic completion script, execute `jj` with `$COMPLETE` set
-    to the name of your shell (see examples below). See the upstream clap issue
-    [#3166][clap] for the explanation.
+/// info | Why are the improved completions not the default?
+To generate the dynamic completion script, execute `jj` with `$COMPLETE` set
+to the name of your shell (see examples below). See the upstream clap issue
+[#3166][clap] for the explanation.
+///
 
 <!-- The content tabs formatting below is optimized for the website and not for GitHub. -->
 
 ### Bash
 
-=== "Standard"
+/// tab | Standard
+```shell
+source <(jj util completion bash)
+```
+///
 
-    ```shell
-    source <(jj util completion bash)
-    ```
-
-=== "Dynamic"
-
-    ```shell
-    source <(COMPLETE=bash jj)
-    ```
+/// tab | Dynamic
+```shell
+source <(COMPLETE=bash jj)
+```
+///
 
 ### Zsh
 
-=== "Standard"
+/// tab | Standard
+```shell
+autoload -U compinit
+compinit
+source <(jj util completion zsh)
+```
+///
 
-    ```shell
-    autoload -U compinit
-    compinit
-    source <(jj util completion zsh)
-    ```
-
-=== "Dynamic"
-
-    ```shell
-    source <(COMPLETE=zsh jj)
-    ```
+/// tab | Dynamic
+```shell
+source <(COMPLETE=zsh jj)
+```
+///
 
 ### Fish
 
-!!! note
+/// note
+No configuration is required with fish >= 4.0.2 which loads dynamic completions by default.
+///
 
-    No configuration is required with fish >= 4.0.2 which loads dynamic completions by default.
+/// tab | Standard
+```shell
+jj util completion fish | source
+```
+///
 
-=== "Standard"
-
-    ```shell
-    jj util completion fish | source
-    ```
-
-=== "Dynamic"
-
-    ```shell
-    COMPLETE=fish jj | source
-    ```
+/// tab | Dynamic
+```shell
+COMPLETE=fish jj | source
+```
+///
 
 ### Nushell
 
-=== "Standard"
-
-    ```nu
-    jj util completion nushell | save completions-jj.nu
-    use completions-jj.nu *  # Or `source completions-jj.nu`
-    ```
+/// tab | Standard
+```nu
+jj util completion nushell | save completions-jj.nu
+use completions-jj.nu *  # Or `source completions-jj.nu`
+```
+///
 
 ### Xonsh
 
-=== "Standard"
-
-    ```shell
-    source-bash $(jj util completion)
-    ```
+/// tab | Standard
+```shell
+source-bash $(jj util completion)
+```
+///
 
 ### Powershell
 
-=== "Standard"
+/// tab | Standard
+Insert this line in your `$PROFILE` file
+(usually `$HOME\Documents\PowerShell\Microsoft.PowerShell_profile.ps1`):
 
-    Insert this line in your `$PROFILE` file
-    (usually `$HOME\Documents\PowerShell\Microsoft.PowerShell_profile.ps1`):
-
-    ```shell
-    Invoke-Expression (& { (jj util completion power-shell | Out-String) })
-    ```
+```shell
+Invoke-Expression (& { (jj util completion power-shell | Out-String) })
+```
+///
 
 [cargo-binstall]: https://github.com/cargo-bins/cargo-binstall
 [clap]: https://github.com/clap-rs/clap/issues/3166
