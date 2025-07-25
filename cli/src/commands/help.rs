@@ -53,7 +53,12 @@ pub(crate) fn cmd_help(
     if let Some(name) = &args.keyword {
         let keyword = find_keyword(name).expect("clap should check this with `value_parser`");
         ui.request_pager();
-        write!(ui.stdout(), "{}", keyword.content)?;
+        let skin = termimad::MadSkin::default();
+        write!(
+            ui.stdout(),
+            "{}",
+            skin.text(keyword.content, Some(ui.term_width()))
+        )?;
 
         return Ok(());
     }
