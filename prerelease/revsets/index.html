@@ -2167,6 +2167,11 @@ aren't included in <code>remote_bookmarks()</code>.</p>
   in <code>x</code>. If <code>x</code> resolves to a single commit, <code>fork_point(x)</code> resolves to <code>x</code>.</p>
 </li>
 <li>
+<p><code>bisect(x)</code>: Finds commits in the input set for which about half of the input
+  set are descendants. The current implementation deals somewhat poorly with
+  non-linear history.</p>
+</li>
+<li>
 <p><code>merges()</code>: Merge commits.</p>
 </li>
 <li>
