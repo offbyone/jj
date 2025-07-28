@@ -999,6 +999,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#prioritize-revsets-in-the-log-over" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prioritize Revsets in the Log over @
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#default-template_1" class="md-nav__link">
     <span class="md-ellipsis">
       Default Template
@@ -1434,6 +1443,15 @@
   <a href="#abandon-commits-that-became-unreachable-in-git" class="md-nav__link">
     <span class="md-ellipsis">
       Abandon commits that became unreachable in Git
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#allow-pushing-new-bookmarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Allow pushing new bookmarks
     </span>
   </a>
   
@@ -2733,6 +2751,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#prioritize-revsets-in-the-log-over" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prioritize Revsets in the Log over @
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#default-template_1" class="md-nav__link">
     <span class="md-ellipsis">
       Default Template
@@ -3168,6 +3195,15 @@
   <a href="#abandon-commits-that-became-unreachable-in-git" class="md-nav__link">
     <span class="md-ellipsis">
       Abandon commits that became unreachable in Git
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#allow-pushing-new-bookmarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Allow pushing new bookmarks
     </span>
   </a>
   
@@ -3776,6 +3812,15 @@ you can add this to your config:</p>
 </code></pre></div>
 <p>The default value for <code>revsets.log</code> is
 <code>'present(@) | ancestors(immutable_heads().., 2) | present(trunk())'</code>.</p>
+<h3 id="prioritize-revsets-in-the-log-over">Prioritize Revsets in the Log over @<a class="headerlink" href="#prioritize-revsets-in-the-log-over" title="Permanent link">&para;</a></h3>
+<p>In some situations the default graph can be hard to read, for example when working with big merges.
+To improve this behavior you can configure which revset in the <code>jj log</code> graph is displayed on
+the left instead of <code>@</code>.</p>
+<p>The following example will prioritize the change with the description "megamerge" with a fallback
+to <code>trunk()</code> in case no such change exists:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[revsets]</span>
+<span class="n">log-graph-prioritize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;coalesce(description(&quot;</span><span class="n">megamerge</span><span class="err">\</span><span class="n">n</span><span class="s2">&quot;), trunk())&quot;</span>
+</code></pre></div>
 <h3 id="default-template_1">Default Template<a class="headerlink" href="#default-template_1" title="Permanent link">&para;</a></h3>
 <p>You can configure the template used when no <code>-T</code> is specified.</p>
 <ul>
@@ -4547,6 +4592,13 @@ usual when commits are abandoned). You can disable this behavior and instead
 leave the Git-unreachable commits in your repo by setting:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[git]</span>
 <span class="n">abandon-unreachable-commits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+</code></pre></div>
+<h3 id="allow-pushing-new-bookmarks">Allow pushing new bookmarks<a class="headerlink" href="#allow-pushing-new-bookmarks" title="Permanent link">&para;</a></h3>
+<p><code>jj git push</code> does not push newly-created bookmarks by default.
+If you do not want to specify <code>--allow-new</code> every time you have created a new
+bookmark, you may want to allow new bookmarks to be pushed by default:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[git]</span>
+<span class="n">push-new-bookmarks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
 <h3 id="generated-bookmark-names-on-push">Generated bookmark names on push<a class="headerlink" href="#generated-bookmark-names-on-push" title="Permanent link">&para;</a></h3>
 <p><code>jj git push --change</code> generates bookmark names with a prefix of "push-" by
