@@ -2069,6 +2069,12 @@ revsets (expressions) as arguments.</p>
   <code>depth</code>.</p>
 </li>
 <li>
+<p><code>first_ancestors(x[, depth])</code>: Similar to <code>ancestors(x[, depth])</code>, but only
+  traverses the first parent of each commit. In Git, the first parent of a merge
+  commit is conventionally the branch into which changes are being merged, so
+  <code>first_ancestors()</code> can be used to exclude changes made on other branches.</p>
+</li>
+<li>
 <p><code>reachable(srcs, domain)</code>: All commits reachable from <code>srcs</code> within
   <code>domain</code>, traversing all parent and child edges.</p>
 </li>
