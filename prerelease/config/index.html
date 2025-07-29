@@ -4483,6 +4483,13 @@ as follows:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[signing]</span>
 <span class="n">backends</span><span class="p">.</span><span class="n">ssh</span><span class="p">.</span><span class="n">allowed-signers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/path/to/allowed-signers&quot;</span>
 </code></pre></div>
+<p>Additionally, an SSH KRL or list of revoked public keys (see
+<a href="https://man.openbsd.org/ssh-keygen#KEY_REVOCATION_LISTS">ssh-keygen man page</a>) can be provided
+with the <code>revocation-list</code> option. If a public key is found in this file then any signature
+relating to it is marked as invalid.</p>
+<div class="highlight"><pre><span></span><code><span class="k">[signing]</span>
+<span class="n">backends</span><span class="p">.</span><span class="n">ssh</span><span class="p">.</span><span class="n">revocation-list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/path/to/revocation-list&quot;</span>
+</code></pre></div>
 <h3 id="manually-signing-commits">Manually signing commits<a class="headerlink" href="#manually-signing-commits" title="Permanent link">&para;</a></h3>
 <p>You can use <a href="../cli-reference/#jj-sign"><code>jj sign</code></a>/<a href="../cli-reference/#jj-unsign"><code>jj unsign</code></a>
 to sign/unsign commits manually.</p>
