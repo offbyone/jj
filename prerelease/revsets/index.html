@@ -2069,6 +2069,12 @@ revsets (expressions) as arguments.</p>
   <code>depth</code>.</p>
 </li>
 <li>
+<p><code>first_parent(x[, depth])</code>: <code>first_parent(x)</code> is similar to <code>parents(x)</code>, but
+  for merges, it only returns the first parent instead of returning all parents.
+  The <code>depth</code> argument also works similarly, so <code>first_parent(x, 2)</code> is
+  equivalent to <code>first_parent(first_parent(x))</code>.</p>
+</li>
+<li>
 <p><code>first_ancestors(x[, depth])</code>: Similar to <code>ancestors(x[, depth])</code>, but only
   traverses the first parent of each commit. In Git, the first parent of a merge
   commit is conventionally the branch into which changes are being merged, so

@@ -5544,9 +5544,9 @@ to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
   find when a bug was introduced.</p>
 </li>
 <li>
-<p>New <code>first_ancestors()</code> revset function which is similar to <code>ancestors()</code>, but
-  only traverses the first parent of each commit (similar to Git's
-  <code>--first-parent</code> option).</p>
+<p>New <code>first_parent()</code> and <code>first_ancestors()</code> revset functions which are
+  similar to <code>parents()</code> and <code>ancestors()</code>, but only traverse the first parent
+  of each commit (similar to Git's <code>--first-parent</code> option).</p>
 </li>
 <li>
 <p>New <code>signing.backends.ssh.revocation-list</code> config for specifying a list of revoked
