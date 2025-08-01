@@ -5555,8 +5555,14 @@ to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 </ul>
 <h3 id="fixed-bugs">Fixed bugs<a class="headerlink" href="#fixed-bugs" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Fixed an error in <code>jj util gc</code> caused by the empty blob being missing from
-  the Git store. <a href="https://github.com/jj-vcs/jj/issues/7062">#7062</a></li>
+<li>
+<p>Fixed an error in <code>jj util gc</code> caused by the empty blob being missing from
+  the Git store. <a href="https://github.com/jj-vcs/jj/issues/7062">#7062</a></p>
+</li>
+<li>
+<p><code>jj op diff -p</code> and <code>jj op log -p</code> now show content diffs from the first
+  predecessor only. <a href="https://github.com/jj-vcs/jj/issues/7090">#7090</a></p>
+</li>
 </ul>
 <h3 id="packaging-changes">Packaging changes<a class="headerlink" href="#packaging-changes" title="Permanent link">&para;</a></h3>
 <h2 id="0310-2025-07-02">[0.31.0] - 2025-07-02<a class="headerlink" href="#0310-2025-07-02" title="Permanent link">&para;</a></h2>
