@@ -2600,6 +2600,9 @@ type</a> are available as keywords. For example,
 <li><code>.diff([files: String]) -&gt; TreeDiff</code>: Changes from the parents within <a href="../filesets/">the
   <code>files</code> expression</a>. All files are compared by default, but it is
   likely to change in future version to respect the command line path arguments.</li>
+<li><code>.files([files: String]) -&gt; List&lt;TreeEntry&gt;</code>: Files that exist in this commit,
+  matching <a href="../filesets/">the <code>files</code> expression</a>. Use <code>.diff().files()</code> to list
+  changed files.</li>
 <li><code>.root() -&gt; Boolean</code>: True if the commit is the root commit.</li>
 </ul>
 <h3 id="changeid-type"><code>ChangeId</code> type<a class="headerlink" href="#changeid-type" title="Permanent link">&para;</a></h3>
