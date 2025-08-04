@@ -338,7 +338,7 @@ impl RevWalk<CompositeIndex> for RevsetGraphWalk<'_> {
 
 fn reachable_positions(
     edges: &[CommitGraphEdge],
-) -> impl DoubleEndedIterator<Item = GlobalCommitPosition> {
+) -> impl DoubleEndedIterator<Item = GlobalCommitPosition> + use<'_> {
     edges
         .iter()
         .filter(|edge| !edge.is_missing())
