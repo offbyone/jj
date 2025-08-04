@@ -222,7 +222,8 @@ pub(crate) fn cmd_evolog(
             with_content_format.write(formatter, |formatter| {
                 template.format(&entry.commit, formatter)?;
                 if let Some(op) = &entry.operation {
-                    write!(formatter, "-- operation ")?;
+                    write!(formatter.labeled("separator"), "--")?;
+                    write!(formatter, " operation ")?;
                     op_summary_template.format(op, formatter)?;
                     writeln!(formatter)?;
                 }
