@@ -2115,35 +2115,50 @@ o root()
 <h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h2>
 <p>You can also specify revisions by using functions. Some functions take other
 revsets (expressions) as arguments.</p>
+<details class="note">
+<summary>Function argument syntax</summary>
+<p>In this documentation, optional arguments are indicated with square
+brackets like <code>[arg]</code>. Some arguments also have an optional label which can
+be used to specify that argument without specifying all previous arguments.</p>
+<p>For instance, <code>remote_bookmarks([bookmark_pattern], [[remote=]remote_pattern])</code>
+indicates that all of the following usages are valid:</p>
+<ul>
+<li><code>remote_bookmarks()</code></li>
+<li><code>remote_bookmarks("main")</code></li>
+<li><code>remote_bookmarks("main", "origin")</code></li>
+<li><code>remote_bookmarks("main", remote="origin")</code></li>
+<li><code>remote_bookmarks(remote="origin")</code></li>
+</ul>
+</details>
 <ul>
 <li>
-<p><code>parents(x[, depth])</code>: <code>parents(x)</code> is the same as <code>x-</code>.
+<p><code>parents(x, [depth])</code>: <code>parents(x)</code> is the same as <code>x-</code>.
   <code>parents(x, depth)</code> returns the parents of <code>x</code> at the given <code>depth</code>. For
   instance, <code>parents(x, 3)</code> is equivalent to <code>x---</code>.</p>
 </li>
 <li>
-<p><code>children(x[, depth])</code>: <code>children(x)</code> is the same as <code>x+</code>.
+<p><code>children(x, [depth])</code>: <code>children(x)</code> is the same as <code>x+</code>.
   <code>children(x, depth)</code> returns the children of <code>x</code> at the given <code>depth</code>. For
   instance, <code>children(x, 3)</code> is equivalent to <code>x+++</code>.</p>
 </li>
 <li>
-<p><code>ancestors(x[, depth])</code>: <code>ancestors(x)</code> is the same as <code>::x</code>.
+<p><code>ancestors(x, [depth])</code>: <code>ancestors(x)</code> is the same as <code>::x</code>.
   <code>ancestors(x, depth)</code> returns the ancestors of <code>x</code> limited to the given
   <code>depth</code>.</p>
 </li>
 <li>
-<p><code>descendants(x[, depth])</code>: <code>descendants(x)</code> is the same as <code>x::</code>.
+<p><code>descendants(x, [depth])</code>: <code>descendants(x)</code> is the same as <code>x::</code>.
   <code>descendants(x, depth)</code> returns the descendants of <code>x</code> limited to the given
   <code>depth</code>.</p>
 </li>
 <li>
-<p><code>first_parent(x[, depth])</code>: <code>first_parent(x)</code> is similar to <code>parents(x)</code>, but
+<p><code>first_parent(x, [depth])</code>: <code>first_parent(x)</code> is similar to <code>parents(x)</code>, but
   for merges, it only returns the first parent instead of returning all parents.
   The <code>depth</code> argument also works similarly, so <code>first_parent(x, 2)</code> is
   equivalent to <code>first_parent(first_parent(x))</code>.</p>
 </li>
 <li>
-<p><code>first_ancestors(x[, depth])</code>: Similar to <code>ancestors(x[, depth])</code>, but only
+<p><code>first_ancestors(x, [depth])</code>: Similar to <code>ancestors(x, [depth])</code>, but only
   traverses the first parent of each commit. In Git, the first parent of a merge
   commit is conventionally the branch into which changes are being merged, so
   <code>first_ancestors()</code> can be used to exclude changes made on other branches.</p>
@@ -2179,7 +2194,7 @@ revsets (expressions) as arguments.</p>
   in a conflicted state, all its possible targets are included.</p>
 </li>
 <li>
-<p><code>remote_bookmarks([bookmark_pattern[, [remote=]remote_pattern]])</code>: All remote
+<p><code>remote_bookmarks([bookmark_pattern], [[remote=]remote_pattern])</code>: All remote
   bookmarks targets across all remotes. If just the <code>bookmark_pattern</code> is
   specified, the bookmarks whose names match the given <a href="#string-patterns">string
   pattern</a> across all remotes are selected. If both
@@ -2193,12 +2208,12 @@ its possible targets are included.</p>
 aren't included in <code>remote_bookmarks()</code>.</p>
 </li>
 <li>
-<p><code>tracked_remote_bookmarks([bookmark_pattern[, [remote=]remote_pattern]])</code>: All
+<p><code>tracked_remote_bookmarks([bookmark_pattern], [[remote=]remote_pattern])</code>: All
   targets of tracked remote bookmarks. Supports the same optional arguments as
   <code>remote_bookmarks()</code>.</p>
 </li>
 <li>
-<p><code>untracked_remote_bookmarks([bookmark_pattern[, [remote=]remote_pattern]])</code>:
+<p><code>untracked_remote_bookmarks([bookmark_pattern], [[remote=]remote_pattern])</code>:
   All targets of untracked remote bookmarks. Supports the same optional arguments
   as <code>remote_bookmarks()</code>.</p>
 </li>
@@ -2236,7 +2251,7 @@ aren't included in <code>remote_bookmarks()</code>.</p>
   function, which is equivalent to <code>x ~ x+</code>.</p>
 </li>
 <li>
-<p><code>latest(x[, count])</code>: Latest <code>count</code> commits in <code>x</code>, based on committer
+<p><code>latest(x, [count])</code>: Latest <code>count</code> commits in <code>x</code>, based on committer
   timestamp. The default <code>count</code> is 1.</p>
 </li>
 <li>
@@ -2322,7 +2337,7 @@ It will <em>not</em> match <code>foobar</code> or <code>bar/foo</code>.</p>
 parsable as a revset. For example, <code>.</code> has to be quoted in <code>files(".")</code>.</p>
 </li>
 <li>
-<p><code>diff_contains(text[, files])</code>: Commits containing diffs matching the given
+<p><code>diff_contains(text, [files])</code>: Commits containing diffs matching the given
   <code>text</code> pattern line by line.</p>
 <p>The search paths can be narrowed by the <code>files</code> expression. All modified files
 are scanned by default, but it is likely to change in future version to

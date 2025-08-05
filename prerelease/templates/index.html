@@ -2574,21 +2574,21 @@ type</a> are available as keywords. For example,
   the given <code>width</code>.</li>
 <li><code>indent(prefix: Template, content: Template) -&gt; Template</code>: Indent
   non-empty lines by the given <code>prefix</code>.</li>
-<li><code>pad_start(width: Integer, content: Template[, fill_char: Template])</code>: Pad (or
+<li><code>pad_start(width: Integer, content: Template, [fill_char: Template])</code>: Pad (or
   right-justify) content by adding leading fill characters. The <code>content</code>
   shouldn't have newline character.</li>
-<li><code>pad_end(width: Integer, content: Template[, fill_char: Template])</code>: Pad (or
+<li><code>pad_end(width: Integer, content: Template, [fill_char: Template])</code>: Pad (or
   left-justify) content by adding trailing fill characters. The <code>content</code>
   shouldn't have newline character.</li>
-<li><code>pad_centered(width: Integer, content: Template[, fill_char: Template])</code>: Pad
+<li><code>pad_centered(width: Integer, content: Template, [fill_char: Template])</code>: Pad
   content by adding both leading and trailing fill characters. If an odd number
   of fill characters are needed, the trailing fill will be one longer than the
   leading fill. The <code>content</code> shouldn't have newline characters.</li>
-<li><code>truncate_start(width: Integer, content: Template[, ellipsis: Template])</code>:
+<li><code>truncate_start(width: Integer, content: Template, [ellipsis: Template])</code>:
   Truncate <code>content</code> by removing leading characters. The <code>content</code> shouldn't
   have newline character. If <code>ellipsis</code> is provided and <code>content</code> was truncated,
   prepend the <code>ellipsis</code> to the result.</li>
-<li><code>truncate_end(width: Integer, content: Template[, ellipsis: Template])</code>:
+<li><code>truncate_end(width: Integer, content: Template, [ellipsis: Template])</code>:
   Truncate <code>content</code> by removing trailing characters. The <code>content</code> shouldn't
   have newline character. If <code>ellipsis</code> is provided and <code>content</code> was truncated,
   append the <code>ellipsis</code> to the result.</li>
@@ -2602,7 +2602,7 @@ type</a> are available as keywords. For example,
 <li><code>stringify(content: Stringify) -&gt; String</code>: Format <code>content</code> to string. This
   effectively removes color labels.</li>
 <li><code>json(value: Serialize) -&gt; String</code>: Serialize <code>value</code> in JSON format.</li>
-<li><code>if(condition: Boolean, then: Template[, else: Template]) -&gt; Template</code>:
+<li><code>if(condition: Boolean, then: Template, [else: Template]) -&gt; Template</code>:
   Conditionally evaluate <code>then</code>/<code>else</code> template content.</li>
 <li><code>coalesce(content: Template...) -&gt; Template</code>: Returns the first <strong>non-empty</strong>
   content.</li>
