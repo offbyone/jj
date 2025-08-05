@@ -5624,6 +5624,10 @@ to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <p>New <code>signing.backends.ssh.revocation-list</code> config for specifying a list of revoked
   public keys for commit signature verification.</p>
 </li>
+<li>
+<p><code>jj fix</code> commands now replace <code>$root</code> with the workspace's root path. This is
+  useful for tools stored inside the workspace.</p>
+</li>
 </ul>
 <h3 id="fixed-bugs">Fixed bugs<a class="headerlink" href="#fixed-bugs" title="Permanent link">&para;</a></h3>
 <ul>
