@@ -7665,6 +7665,11 @@ Martin von Zweigbergk</p>
 <p><code>-r</code>, <code>--revision &lt;REVSET&gt;</code> — The revision to get the file contents from</p>
 <p>Default value: <code>@</code></p>
 </li>
+<li>
+<p><code>-T</code>, <code>--template &lt;TEMPLATE&gt;</code> — Render each file metadata using the given template</p>
+<p>All 0-argument methods of the [<code>TreeEntry</code> type] are available as keywords in the template expression. See [<code>jj help -k templates</code>] for more information.</p>
+<p>If not specified, this defaults to the <code>templates.file_show</code> setting.</p>
+</li>
 </ul>
 <h2 id="jj-file-track"><code>jj file track</code><a class="headerlink" href="#jj-file-track" title="Permanent link">&para;</a></h2>
 <p>Start tracking specified paths in the working copy</p>
