@@ -2434,6 +2434,13 @@ Cargo will happily use up your entire hard drive. If this happens, run
 <p>Run this in the jj repo:</p>
 <div class="highlight"><pre><span></span><code>jj<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--repo<span class="w"> </span>fix.tools.rustfmt<span class="w"> </span><span class="s1">&#39;{ command = [&quot;rustfmt&quot;, &quot;+nightly&quot;], patterns = [&quot;glob:**/*.rs&quot;] }&#39;</span>
 </code></pre></div>
+<blockquote>
+<p>Note: users of Nix and <code>direnv</code> should drop the <code>"+nightly"</code> argument above
+since the devShell is already configured to pull in a nightly version of
+rustfmt:</p>
+<div class="highlight"><pre><span></span><code>jj<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--repo<span class="w"> </span>fix.tools.rustfmt<span class="w"> </span><span class="s1">&#39;{ command = [&quot;rustfmt&quot;], patterns = [&quot;glob:**/*.rs&quot;] }&#39;</span>
+</code></pre></div>
+</blockquote>
 <h3 id="using-mold-for-faster-tests-on-linux">Using <code>mold</code> for faster tests on Linux<a class="headerlink" href="#using-mold-for-faster-tests-on-linux" title="Permanent link">&para;</a></h3>
 <p>On a machine with a multi-core CPU, one way to speed up
 <code>cargo nextest</code> on Linux is to use the multi-threaded <a href="https://github.com/rui314/mold"><code>mold</code>
