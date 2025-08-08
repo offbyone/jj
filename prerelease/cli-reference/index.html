@@ -7790,6 +7790,7 @@ output of the first tool.</p>
 <li>
 <p><code>--colocate</code> — Whether or not to colocate the Jujutsu repo with the git repo</p>
 </li>
+<li><code>--no-colocate</code> — Disable colocation of the Jujutsu repo with the git repo</li>
 <li><code>--depth &lt;DEPTH&gt;</code> — Create a shallow clone of the given depth</li>
 </ul>
 <h2 id="jj-git-export"><code>jj git export</code><a class="headerlink" href="#jj-git-export" title="Permanent link">&para;</a></h2>
@@ -7836,6 +7837,9 @@ output of the first tool.</p>
 <p><code>--colocate</code> — Specifies that the <code>jj</code> repo should also be a valid <code>git</code> repo, allowing the use of both <code>jj</code> and <code>git</code> commands in the same directory.</p>
 <p>This is done by placing the backing git repo into a <code>.git</code> directory in the root of the <code>jj</code> repo along with the <code>.jj</code> directory. If the <code>.git</code> directory already exists, all the existing commits will be imported.</p>
 <p>This option is mutually exclusive with <code>--git-repo</code>.</p>
+</li>
+<li>
+<p><code>--no-colocate</code> — Disable colocation of the Jujutsu repo with the git repo</p>
 </li>
 <li>
 <p><code>--git-repo &lt;GIT_REPO&gt;</code> — Specifies a path to an <strong>existing</strong> git repository to be used as the backing git repo for the newly created <code>jj</code> repo.</p>
