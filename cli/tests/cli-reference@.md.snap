@@ -745,7 +745,7 @@ Starts an editor to let you edit the description of changes. The editor will be 
 * `--edit` — Open an editor
 
    Forces an editor to open when using `--stdin` or `--message` to allow the message to be edited afterwards.
-* `--reset-author` — Reset the author to the configured user
+* `--reset-author` — Reset the author to the configured user and update author timestamp
 
    This resets the author name, email, and timestamp.
 

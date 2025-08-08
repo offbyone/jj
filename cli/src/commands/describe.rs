@@ -86,7 +86,7 @@ pub(crate) struct DescribeArgs {
     /// allow the message to be edited afterwards.
     #[arg(long)]
     edit: bool,
-    /// Reset the author to the configured user
+    /// Reset the author to the configured user and update author timestamp
     ///
     /// This resets the author name, email, and timestamp.
     ///
