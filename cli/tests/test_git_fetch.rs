@@ -297,6 +297,98 @@ fn test_git_fetch_with_glob_with_no_matching_remotes() {
 }
 
 #[test]
+fn test_git_fetch_with_tracked_single() {
+    let test_env = TestEnvironment::default();
+    test_env.run_jj_in(".", ["git", "init", "repo"]).success();
+    let work_dir = test_env.work_dir("repo");
+    add_git_remote(&test_env, &work_dir, "origin");
+    add_git_remote(&test_env, &work_dir, "upstream");
+    insta::assert_snapshot!(work_dir.run_jj(["git", "fetch", "--all-remotes"]), @r"
+    ------- stderr -------
+    bookmark: origin@origin     [new] untracked
+    bookmark: upstream@upstream [new] untracked
+    [EOF]
+    ");
+
+    work_dir
+        .run_jj(["bookmark", "track", "upstream@upstream"])
+        .success();
+
+    insta::assert_snapshot!(work_dir.run_jj(["git", "fetch", "--tracked"]), @r"
+    ------- stderr -------
+    bookmark: upstream@upstream [new] untracked
+    [EOF]
+    ");
+
+    insta::assert_snapshot!(get_bookmark_output(&work_dir), @r"
+    upstream: qmyrypzk ab8b299e message
+      @upstream: qmyrypzk ab8b299e message
+    rem1: ppspxspk 4acd0343 message
+        @rem1: ppspxspk 4acd0343 message
+    [EOF]
+    [exit status: 0]
+    ");
+}
+
+#[test]
+fn test_git_fetch_with_tracked_multiple() {
+    let test_env = TestEnvironment::default();
+    test_env.run_jj_in(".", ["git", "init", "repo"]).success();
+    let work_dir = test_env.work_dir("repo");
+    add_git_remote(&test_env, &work_dir, "upstream");
+    add_git_remote(&test_env, &work_dir, "rem1");
+
+    work_dir
+        .run_jj(["bookmark", "track", "upstream@upstream"])
+        .success();
+    work_dir
+        .run_jj(["bookmark", "track", "rem1@rem1"])
+        .success();
+
+    work_dir.run_jj(["git", "fetch", "--tracked"]).success();
+    insta::assert_snapshot!(get_bookmark_output(&work_dir), @r"
+    upstream: qmyrypzk ab8b299e message
+      @upstream: qmyrypzk ab8b299e message
+    rem1: ppspxspk 4acd0343 message
+        @rem1: ppspxspk 4acd0343 message
+    [EOF]
+    [exit status: 0]
+    ");
+}
+
+#[test]
+fn test_git_fetch_with_tracked_conflicting() {
+    let test_env = TestEnvironment::default();
+    test_env.run_jj_in(".", ["git", "init", "repo"]).success();
+    let work_dir = test_env.work_dir("repo");
+    add_git_remote(&test_env, &work_dir, "upstream");
+
+    let output = work_dir.run_jj(["git", "fetch", "--tracked", "--remote=glob:rem*"]);
+    insta::assert_snapshot!(output, @r"
+    ------- stderr -------
+    error: the argument '--tracked' cannot be used with '--remote <REMOTE>'
+    
+    Usage: jj git fetch --tracked
+    
+    For more information, try '--help'.
+    [EOF]
+    [exit status: 2]
+    ");
+
+    let output = work_dir.run_jj(["git", "fetch", "--tracked", "--branch", "a1"]);
+    insta::assert_snapshot!(output, @r"
+    ------- stderr -------
+    error: the argument '--tracked' cannot be used with '--branch <BRANCH>'
+    
+    Usage: jj git fetch --tracked
+    
+    For more information, try '--help'.
+    [EOF]
+    [exit status: 2]
+    ");
+}
+
+#[test]
 fn test_git_fetch_all_remotes() {
     let test_env = TestEnvironment::default();
     test_env.add_config("git.auto-local-bookmark = true");

@@ -54,6 +54,21 @@ pub struct GitFetchArgs {
         add = ArgValueCandidates::new(complete::bookmarks),
     )]
     branch: Vec<StringPattern>,
+
+    /// Fetch all tracked bookmakrs from their respective remots
+    ///
+    /// This is a convenience option that fetches all bookmarks that are
+    /// tracked by the current working copy. It is equivalent to
+    /// specifying each tracked bookmark as a `--branch` argument.
+    ///
+    /// This option is mutually exclusive with `--branch` and `--remote`.
+    #[arg(
+        long,
+        short,
+        conflicts_with_all(["branch", "remotes"])
+    )]
+    tracked: bool,
+
     /// The remote to fetch from (only named remotes are supported, can be
     /// repeated)
     ///
